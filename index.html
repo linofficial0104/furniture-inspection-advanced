@@ -177,19 +177,20 @@
         <button onclick="exitCameraToHome()" class="w-14 shrink-0 whitespace-nowrap text-left text-xs font-bold text-neutral-600 px-2 py-1 rounded hover:bg-neutral-100">
           ← 返回
         </button>
-        <div class="text-center">
+        <div class="flex-1 min-w-0 text-center px-1">
           <span id="step-badge" class="text-xs font-bold text-[#0058A3] block">照片 1 / 5：桌面整體</span>
           <p id="prompt-text" class="text-xs text-neutral-600 mt-0.5">請由上方或斜上方拍攝完整桌面</p>
         </div>
-        <span class="w-14 shrink-0"></span>
+        <!-- 光線提示：右上角，用顏色區分 -->
+        <span id="light-indicator" class="shrink-0 whitespace-nowrap px-2.5 py-1 rounded-full text-xs font-bold bg-neutral-700 text-white">相機啟動中</span>
       </div>
 
       <div class="relative flex-1 bg-neutral-900 flex items-center justify-center overflow-hidden">
         <video id="video" autoplay playsinline muted class="absolute inset-0 w-full h-full object-cover"></video>
         <canvas id="calc-canvas" class="hidden"></canvas>
 
-        <!-- 光線提示：放在鏡頭畫面上方正中間，用顏色區分 -->
-        <div id="light-indicator" class="absolute top-3 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold shadow-lg bg-neutral-700 text-white">相機啟動中…</div>
+        <!-- 左上角：現在拍的是哪一張（淡淡的半透明底，白色桌子上也看得清楚） -->
+        <div id="camera-step-label" class="absolute top-3 left-3 z-20 px-2.5 py-1 rounded-lg bg-black/35 text-white text-sm font-bold pointer-events-none">照片 1/5　桌面整體</div>
 
         <!-- 桌面整體的對準框：微微的梯形（上邊稍窄，像從斜上方看桌面）
              用畫面的百分比定位，不管手機直拍或電腦橫向鏡頭都會在畫面內 -->
@@ -222,11 +223,11 @@
 
       <div class="p-4 bg-white text-neutral-900 border-t border-neutral-200 space-y-3 shrink-0 safe-bottom">
         <div class="grid grid-cols-5 gap-2" id="thumbs-grid">
-          <div onclick="selectStep(0)" class="cursor-pointer aspect-square rounded bg-neutral-100 border-2 border-[#0058A3] flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative">1.桌面</div>
-          <div onclick="selectStep(1)" class="cursor-pointer aspect-square rounded bg-neutral-100 border border-neutral-200 flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative">2.左前角</div>
-          <div onclick="selectStep(2)" class="cursor-pointer aspect-square rounded bg-neutral-100 border border-neutral-200 flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative">3.左後角</div>
-          <div onclick="selectStep(3)" class="cursor-pointer aspect-square rounded bg-neutral-100 border border-neutral-200 flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative">4.右後角</div>
-          <div onclick="selectStep(4)" class="cursor-pointer aspect-square rounded bg-neutral-100 border border-neutral-200 flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative">5.右前角</div>
+          <div onclick="selectStep(0)" class="cursor-pointer aspect-square rounded-lg bg-neutral-100 border border-neutral-200 flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative ring-[3px] ring-[#003E7E] ring-offset-2 !text-[#003E7E] !font-bold">1.桌面</div>
+          <div onclick="selectStep(1)" class="cursor-pointer aspect-square rounded-lg bg-neutral-100 border border-neutral-200 flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative">2.左前角</div>
+          <div onclick="selectStep(2)" class="cursor-pointer aspect-square rounded-lg bg-neutral-100 border border-neutral-200 flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative">3.左後角</div>
+          <div onclick="selectStep(3)" class="cursor-pointer aspect-square rounded-lg bg-neutral-100 border border-neutral-200 flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative">4.右後角</div>
+          <div onclick="selectStep(4)" class="cursor-pointer aspect-square rounded-lg bg-neutral-100 border border-neutral-200 flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative">5.右前角</div>
         </div>
 
         <div class="flex gap-2.5">
@@ -771,8 +772,8 @@
     let lightState = 'off';
     const LIGHT_STYLES = {
       ok:     { text: '☀ 光線充足', cls: 'bg-green-600 text-white' },
-      dark:   { text: '🌙 光線太暗，請開燈或移到明亮處', cls: 'bg-red-600 text-white animate-pulse' },
-      bright: { text: '⚠ 反光過強，請調整角度', cls: 'bg-amber-400 text-neutral-900' },
+      dark:   { text: '🌙 光線太暗', cls: 'bg-red-600 text-white animate-pulse' },
+      bright: { text: '⚠ 反光過強', cls: 'bg-amber-400 text-neutral-900' },
       off:    { text: '相機未開啟', cls: 'bg-neutral-700 text-white' }
     };
 
@@ -781,7 +782,7 @@
       const el = document.getElementById('light-indicator');
       const style = LIGHT_STYLES[state];
       el.innerText = text || style.text;
-      el.className = `absolute top-3 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold shadow-lg ${style.cls}`;
+      el.className = `shrink-0 whitespace-nowrap px-2.5 py-1 rounded-full text-xs font-bold ${style.cls}`;
       updateCaptureButton();
     }
 
@@ -961,7 +962,7 @@
     async function startFlow() {
       showScreen('camera');
       if (cameraStream) return;  // 相機已經開著就不重複開
-      setLightState('off', '相機啟動中…');
+      setLightState('off', '相機啟動中');
       try {
         cameraStream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 960 } },
@@ -976,7 +977,7 @@
         startLightMonitor();
       } catch (err) {
         cameraStream = null;
-        setLightState('off', settings.allowAlbum ? '相機未開啟，可從相簿選圖' : '相機未開啟，請允許使用相機');
+        setLightState('off', '相機未開啟');
       }
     }
 
@@ -1021,10 +1022,16 @@
         svgCorner.classList.remove('hidden');
       }
 
+      // 鏡頭畫面左上角：現在拍的是哪一張
+      const [, name] = info.badge.split('：');
+      document.getElementById('camera-step-label').innerText = `照片 ${currentStep + 1}/5　${name}`;
+
+      // 下方縮圖：現在這張加上深藍色粗框，文字也變深藍色
       const slots = document.getElementById('thumbs-grid').children;
       for (let i = 0; i < 5; i++) {
-        slots[i].classList.toggle('border-2', i === currentStep);
-        slots[i].classList.toggle('border-[#0058A3]', i === currentStep);
+        const selected = i === currentStep;
+        ['ring-[3px]', 'ring-[#003E7E]', 'ring-offset-2', '!text-[#003E7E]', '!font-bold']
+          .forEach(cls => slots[i].classList.toggle(cls, selected));
       }
     }
 
