@@ -61,8 +61,11 @@
     <!-- 頂部導覽列 -->
     <header id="app-header" class="px-5 h-14 bg-white border-b border-neutral-200 flex items-center justify-between shrink-0 z-20">
       <div class="flex items-center gap-2">
-        <div class="ikea-blue px-2 py-0.5 rounded font-black text-xs tracking-wider text-[#FFDB00]">IKEA</div>
+        <!-- 連點 IKEA 標誌 5 下打開開發者設定 -->
+        <div onclick="devTap()" class="ikea-blue px-2 py-0.5 rounded font-black text-xs tracking-wider text-[#FFDB00] cursor-default">IKEA</div>
         <span class="text-sm font-bold text-neutral-900">智鑑家具</span>
+        <!-- 設定跟預設不同時顯示，提醒現在不是正式模式 -->
+        <button id="dev-badge" onclick="openDevPanel()" class="hidden text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-700">開發者設定</button>
       </div>
       <button onclick="toggleModal('ios-modal', true)" class="text-xs font-medium text-[#0058A3] active:opacity-70">
         加入主畫面
@@ -119,10 +122,10 @@
           開始拍照檢測
         </button>
         <div class="grid grid-cols-3 gap-2">
-          <button onclick="document.getElementById('batch-upload').click()" class="col-span-2 py-3 rounded-full font-bold text-xs bg-white text-neutral-900 border border-neutral-300 active:bg-neutral-100 transition">
+          <button id="btn-album-home" onclick="document.getElementById('batch-upload').click()" class="col-span-2 py-3 rounded-full font-bold text-xs bg-white text-neutral-900 border border-neutral-300 active:bg-neutral-100 transition">
             從相簿選取 5 張照片
           </button>
-          <button onclick="testBackendFolderImages()" class="col-span-1 py-3 rounded-full font-bold text-xs ikea-gray text-neutral-700 active:bg-neutral-200 transition">
+          <button id="btn-sample-test" onclick="testBackendFolderImages()" class="col-span-1 py-3 rounded-full font-bold text-xs ikea-gray text-neutral-700 active:bg-neutral-200 transition">
             範例測試
           </button>
         </div>
@@ -210,7 +213,7 @@
           </div>
           <div id="check-banner-actions" class="hidden flex gap-2 mt-2.5">
             <button onclick="retakeRejected()" class="flex-1 py-2 rounded-full ikea-blue text-white font-bold">重拍這張</button>
-            <button onclick="useRejectedAnyway()" class="flex-1 py-2 rounded-full bg-white border border-neutral-300 font-bold text-neutral-800">仍然使用</button>
+            <button id="btn-use-anyway" onclick="useRejectedAnyway()" class="flex-1 py-2 rounded-full bg-white border border-neutral-300 font-bold text-neutral-800">仍然使用</button>
           </div>
         </div>
         <div class="grid grid-cols-5 gap-2" id="thumbs-grid">
@@ -222,7 +225,7 @@
         </div>
 
         <div class="flex gap-2.5">
-          <button onclick="document.getElementById('single-upload').click()" class="flex-1 py-3 rounded-full font-bold text-xs bg-white text-neutral-900 border border-neutral-400 active:bg-neutral-100">
+          <button id="btn-album-camera" onclick="document.getElementById('single-upload').click()" class="flex-1 py-3 rounded-full font-bold text-xs bg-white text-neutral-900 border border-neutral-400 active:bg-neutral-100">
             從相簿選圖
           </button>
           <input type="file" id="single-upload" accept="image/*" class="hidden" onchange="handleSingleUpload(event)">
@@ -523,6 +526,57 @@
       </div>
     </div>
 
+    <!-- 開發者設定（連點 IKEA 標誌 5 下，或網址加 ?dev 打開）；設定只存在這台裝置的瀏覽器 -->
+    <div id="dev-modal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center p-4">
+      <div class="bg-white w-full max-w-sm rounded-2xl p-5 shadow-xl space-y-4 text-xs">
+        <div class="flex justify-between items-center">
+          <div>
+            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-700">開發者模式</span>
+            <h3 class="text-sm font-bold text-neutral-900 mt-1">檢測流程設定</h3>
+          </div>
+          <button onclick="closeDevPanel()" class="text-neutral-400 hover:text-black font-bold">✕</button>
+        </div>
+
+        <label class="flex items-start justify-between gap-3 ikea-gray p-3 rounded-xl cursor-pointer">
+          <div>
+            <div class="font-bold text-neutral-900">開放從相簿上傳</div>
+            <div class="text-neutral-500 mt-0.5">關閉時只能用相機現場拍攝</div>
+          </div>
+          <input type="checkbox" id="dev-allow-album" onchange="updateDevSetting()" class="mt-0.5 w-5 h-5 accent-[#0058A3] shrink-0">
+        </label>
+
+        <div class="ikea-gray p-3 rounded-xl space-y-2">
+          <div class="font-bold text-neutral-900">照片檢查方式</div>
+          <label class="flex items-start gap-2 cursor-pointer">
+            <input type="radio" name="dev-check-mode" value="each" onchange="updateDevSetting()" class="mt-0.5 accent-[#0058A3]">
+            <span><b>每拍一張就檢查</b><span class="text-neutral-500">：拍錯馬上知道，每張多等約 2 秒</span></span>
+          </label>
+          <label class="flex items-start gap-2 cursor-pointer">
+            <input type="radio" name="dev-check-mode" value="batch" onchange="updateDevSetting()" class="mt-0.5 accent-[#0058A3]">
+            <span><b>5 張拍完一起檢查</b><span class="text-neutral-500">：拍照不用等，最後一次檢查 5 張</span></span>
+          </label>
+          <label class="flex items-start gap-2 cursor-pointer">
+            <input type="radio" name="dev-check-mode" value="off" onchange="updateDevSetting()" class="mt-0.5 accent-[#0058A3]">
+            <span><b>不檢查</b><span class="text-neutral-500">：直接送出分析（AI 服務不穩時備用）</span></span>
+          </label>
+        </div>
+
+        <label class="flex items-start justify-between gap-3 ikea-gray p-3 rounded-xl cursor-pointer">
+          <div>
+            <div class="font-bold text-neutral-900">AI 判定不行時可「仍然使用」</div>
+            <div class="text-neutral-500 mt-0.5">關閉時沒通過檢查的照片一定要重拍</div>
+          </div>
+          <input type="checkbox" id="dev-allow-anyway" onchange="updateDevSetting()" class="mt-0.5 w-5 h-5 accent-[#0058A3] shrink-0">
+        </label>
+
+        <div class="flex gap-2">
+          <button onclick="resetDevSettings()" class="flex-1 py-2.5 rounded-full border border-neutral-300 font-bold text-neutral-700">恢復預設</button>
+          <button onclick="closeDevPanel()" class="flex-1 py-2.5 rounded-full bg-neutral-900 text-white font-bold">完成</button>
+        </div>
+        <p class="text-[10px] text-neutral-400 text-center">設定只存在這台裝置的瀏覽器，不影響其他人</p>
+      </div>
+    </div>
+
     <!-- 全域載入畫面 -->
     <div id="global-loading" class="hidden fixed inset-0 z-50 bg-black/75 flex flex-col items-center justify-center p-6 text-center text-white">
       <div class="w-9 h-9 border-4 border-[#FFDB00] border-t-transparent rounded-full animate-spin mb-3"></div>
@@ -579,9 +633,91 @@
     let currentStep = 0;
     const capturedImages = [null, null, null, null, null];
 
+    // ===== 檢測流程設定（開發者模式可以改）=====
+    // 預設是正式模式：只能現場拍、每張拍完就檢查、沒通過一定要重拍
+    const DEFAULT_SETTINGS = {
+      allowAlbum: false,       // 開放從相簿上傳
+      checkMode: 'each',       // each：每拍一張就檢查 / batch：5 張拍完一起檢查 / off：不檢查
+      allowUseAnyway: false    // AI 判定不行時可「仍然使用」
+    };
+    const SETTINGS_KEY = 'smartinspect-dev-settings';
+
+    // 設定存在瀏覽器；讀不到（無痕模式等）就用預設
+    function loadSettings() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+        const merged = { ...DEFAULT_SETTINGS, ...saved };
+        if (!['each', 'batch', 'off'].includes(merged.checkMode)) merged.checkMode = DEFAULT_SETTINGS.checkMode;
+        return merged;
+      } catch (e) {
+        return { ...DEFAULT_SETTINGS };
+      }
+    }
+    let settings = loadSettings();
+
+    function saveSettings() {
+      try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch (e) { /* 存不了就只在這次有效 */ }
+    }
+
+    function isDefaultSettings() {
+      return Object.keys(DEFAULT_SETTINGS).every(k => settings[k] === DEFAULT_SETTINGS[k]);
+    }
+
+    // 依設定顯示／隱藏按鈕
+    function applySettings() {
+      document.getElementById('btn-album-home').classList.toggle('hidden', !settings.allowAlbum);
+      document.getElementById('btn-album-camera').classList.toggle('hidden', !settings.allowAlbum);
+      // 沒有相簿按鈕時，「範例測試」佔滿整排
+      const sample = document.getElementById('btn-sample-test');
+      sample.classList.toggle('col-span-1', settings.allowAlbum);
+      sample.classList.toggle('col-span-3', !settings.allowAlbum);
+      document.getElementById('dev-badge').classList.toggle('hidden', isDefaultSettings());
+    }
+
+    // 連點 IKEA 標誌 5 下（每下間隔 1.5 秒內）打開開發者設定
+    let devTapCount = 0, devTapTimer = null;
+    function devTap() {
+      devTapCount++;
+      clearTimeout(devTapTimer);
+      devTapTimer = setTimeout(() => { devTapCount = 0; }, 1500);
+      if (devTapCount >= 5) {
+        devTapCount = 0;
+        openDevPanel();
+      }
+    }
+
+    function openDevPanel() {
+      document.getElementById('dev-allow-album').checked = settings.allowAlbum;
+      document.getElementById('dev-allow-anyway').checked = settings.allowUseAnyway;
+      document.querySelectorAll('input[name="dev-check-mode"]').forEach(r => { r.checked = r.value === settings.checkMode; });
+      toggleModal('dev-modal', true);
+    }
+
+    function closeDevPanel() {
+      toggleModal('dev-modal', false);
+    }
+
+    function updateDevSetting() {
+      settings.allowAlbum = document.getElementById('dev-allow-album').checked;
+      settings.allowUseAnyway = document.getElementById('dev-allow-anyway').checked;
+      const mode = document.querySelector('input[name="dev-check-mode"]:checked');
+      if (mode) settings.checkMode = mode.value;
+      saveSettings();
+      applySettings();
+    }
+
+    function resetDevSettings() {
+      settings = { ...DEFAULT_SETTINGS };
+      saveSettings();
+      applySettings();
+      openDevPanel();   // 更新面板上的勾選狀態
+    }
+
     // ===== 拍照當下的單張檢查 =====
     // 沒通過檢查的照片先放這裡（{ dataUrl, hint }），使用者選「仍然使用」才放回 capturedImages
     const rejectedPhotos = [null, null, null, null, null];
+    // 哪幾張已經通過檢查（換新照片就重設），「5 張一起檢查」時只檢查還沒通過的
+    const photoPassed = [false, false, false, false, false];
     let checkingPhoto = false;   // 檢查中先不能拍下一張
     const CHECK_TIMEOUT_MS = 12000;
 
@@ -620,6 +756,7 @@
       document.getElementById('check-banner-text').innerText = text;
       document.getElementById('check-spinner').classList.toggle('hidden', state !== 'checking');
       document.getElementById('check-banner-actions').classList.toggle('hidden', state !== 'fail');
+      document.getElementById('btn-use-anyway').classList.toggle('hidden', !settings.allowUseAnyway);
       if (state === 'pass') bannerTimer = setTimeout(() => banner.classList.add('hidden'), 2000);
     }
 
@@ -631,12 +768,46 @@
     function goToNextStep() {
       const nextEmpty = capturedImages.findIndex(img => img === null);
       if (nextEmpty !== -1) selectStep(nextEmpty);
+      else if (settings.checkMode === 'batch') checkAllThenSubmit();
       else goToResult();
+    }
+
+    // 「5 張拍完一起檢查」：同時檢查還沒通過的照片，全部通過才送出分析
+    async function checkAllThenSubmit() {
+      const pending = [0, 1, 2, 3, 4].filter(i => !photoPassed[i] && capturedImages[i]);
+      if (pending.length) {
+        checkingPhoto = true;
+        showCheckBanner('checking', `AI 正在檢查 ${pending.length} 張照片…`);
+        const results = await Promise.all(pending.map(i => checkPhoto(i + 1, capturedImages[i])));
+        checkingPhoto = false;
+        results.forEach((r, k) => markCheckResult(pending[k], capturedImages[pending[k]], r));
+      }
+      const firstRejected = rejectedPhotos.findIndex(r => r);
+      if (firstRejected !== -1) {
+        selectStep(firstRejected);   // 停在第一張沒通過的，顯示重拍建議
+        return;
+      }
+      showCheckBanner('hidden');
+      goToResult();
+    }
+
+    // 記錄一張照片的檢查結果：通過放進 capturedImages，沒通過放進 rejectedPhotos
+    function markCheckResult(idx, dataUrl, result) {
+      if (result.ok) {
+        capturedImages[idx] = dataUrl;
+        rejectedPhotos[idx] = null;
+        photoPassed[idx] = true;
+      } else {
+        capturedImages[idx] = null;
+        rejectedPhotos[idx] = { dataUrl, hint: result.hint };
+        photoPassed[idx] = false;
+      }
     }
 
     // 不通過時按「重拍這張」：丟掉這張，停在這一步
     function retakeRejected() {
       rejectedPhotos[currentStep] = null;
+      photoPassed[currentStep] = false;
       renderSlotThumb(currentStep, null);
       showCheckBanner('hidden');
       updateStepUI();
@@ -645,9 +816,10 @@
     // 不通過時按「仍然使用」：AI 也可能判斷錯，讓使用者自己決定
     function useRejectedAnyway() {
       const rejected = rejectedPhotos[currentStep];
-      if (!rejected) return;
+      if (!rejected || !settings.allowUseAnyway) return;
       capturedImages[currentStep] = rejected.dataUrl;
       rejectedPhotos[currentStep] = null;
+      photoPassed[currentStep] = true;   // 使用者自己決定保留，不再檢查
       renderSlotThumb(currentStep, rejected.dataUrl);
       showCheckBanner('hidden');
       updateStepUI();
@@ -716,6 +888,13 @@
     }
     checkServer();
 
+    // 頁面載入時套用設定；網址有 ?dev 時直接打開開發者設定
+    applySettings();
+    if (new URLSearchParams(location.search).has('dev')) {
+      toggleModal('guide-modal', false);
+      openDevPanel();
+    }
+
     function stopCamera() {
       if (lightTimer) { clearInterval(lightTimer); lightTimer = null; }
       if (cameraStream) {
@@ -753,6 +932,7 @@
     function finishAndGoHome() {
       capturedImages.fill(null);
       rejectedPhotos.fill(null);
+      photoPassed.fill(false);
       lastRetakeViews = [];
       for (let i = 0; i < 5; i++) renderSlotThumb(i, null);
       showCheckBanner('hidden');
@@ -829,7 +1009,8 @@
         document.getElementById('video').srcObject = cameraStream;
         startLightMonitor();
       } catch (err) {
-        document.getElementById('light-indicator').innerText = "相簿上傳模式";
+        cameraStream = null;
+        document.getElementById('light-indicator').innerText = settings.allowAlbum ? "相簿上傳模式" : "相機未開啟";
       }
     }
 
@@ -925,7 +1106,9 @@
       const ctx = canvas.getContext('2d');
 
       if (!video.videoWidth) {
-        alert("目前未開啟相機鏡頭，請點左邊「從相簿選圖」選取照片！");
+        alert(settings.allowAlbum
+          ? "目前未開啟相機鏡頭，請點左邊「從相簿選圖」選取照片！"
+          : "無法開啟相機，請允許瀏覽器使用相機後重新整理頁面。");
         return;
       }
       const scale = Math.min(1, 800 / Math.max(video.videoWidth, video.videoHeight));
@@ -939,7 +1122,7 @@
     async function handleSingleUpload(event) {
       const file = event.target.files[0];
       event.target.value = '';
-      if (!file || checkingPhoto) return;
+      if (!file || checkingPhoto || !settings.allowAlbum) return;
       try {
         await saveStepImage(await compressImageFile(file));
       } catch (e) {
@@ -950,7 +1133,7 @@
     async function handleBatchUpload(event) {
       const files = Array.from(event.target.files).slice(0, 5);
       event.target.value = '';
-      if (!files.length) return;
+      if (!files.length || !settings.allowAlbum) return;
 
       showScreen('camera');
       const loaded = [];
@@ -958,39 +1141,36 @@
         for (let idx = 0; idx < files.length; idx++) {
           const compressed = await compressImageFile(files[idx]);
           renderSlotThumb(idx, compressed);
+          capturedImages[idx] = compressed;
+          rejectedPhotos[idx] = null;
+          photoPassed[idx] = false;
           loaded.push([idx, compressed]);
         }
       } catch (e) {
         alert(e.message);
       }
 
-      // 每張都檢查一次（同時送出，大約跟檢查一張一樣快）
-      checkingPhoto = true;
-      showCheckBanner('checking', `AI 正在檢查 ${loaded.length} 張照片…`);
-      const results = await Promise.all(loaded.map(([idx, url]) => checkPhoto(idx + 1, url)));
-      checkingPhoto = false;
-      results.forEach((r, i) => {
-        const [idx, url] = loaded[i];
-        if (r.ok) {
-          capturedImages[idx] = url;
-          rejectedPhotos[idx] = null;
-        } else {
-          capturedImages[idx] = null;
-          rejectedPhotos[idx] = { dataUrl: url, hint: r.hint };
-        }
-      });
+      // 「每拍一張就檢查」模式：選完馬上檢查（同時送出，大約跟檢查一張一樣快）
+      // 「5 張一起檢查」模式：等 5 張都齊了，由 goToNextStep 統一檢查
+      if (settings.checkMode === 'each' && loaded.length) {
+        checkingPhoto = true;
+        showCheckBanner('checking', `AI 正在檢查 ${loaded.length} 張照片…`);
+        const results = await Promise.all(loaded.map(([idx, url]) => checkPhoto(idx + 1, url)));
+        checkingPhoto = false;
+        results.forEach((r, i) => markCheckResult(loaded[i][0], loaded[i][1], r));
+      }
 
       const firstRejected = rejectedPhotos.findIndex(r => r);
       const nextEmpty = capturedImages.findIndex(img => img === null);
       if (nextEmpty === -1) {
         showCheckBanner('hidden');
-        goToResult();
+        goToNextStep();   // 依檢查方式：直接分析，或先一起檢查
         return;
       }
       // 有照片沒通過或不足 5 張：留在拍攝畫面補拍（順便開相機）
       startFlow();
       selectStep(firstRejected !== -1 ? firstRejected : nextEmpty);
-      if (firstRejected === -1) showCheckBanner('pass', `✓ ${loaded.length} 張照片都沒問題，請補拍剩下的照片`);
+      if (firstRejected === -1 && settings.checkMode === 'each') showCheckBanner('pass', `✓ ${loaded.length} 張照片都沒問題，請補拍剩下的照片`);
     }
 
     function renderSlotThumb(idx, dataUrl) {
@@ -1004,22 +1184,30 @@
     async function saveStepImage(dataUrl) {
       const step = currentStep;
       renderSlotThumb(step, dataUrl);
+      photoPassed[step] = false;   // 換了新照片，要重新檢查
+
+      // 「5 張一起檢查」或「不檢查」：先收下，直接拍下一張
+      if (settings.checkMode !== 'each') {
+        capturedImages[step] = dataUrl;
+        rejectedPhotos[step] = null;
+        updateStepUI();
+        goToNextStep();
+        return;
+      }
+
       checkingPhoto = true;
       showCheckBanner('checking', `AI 正在檢查第 ${step + 1} 張照片…`);
       const result = await checkPhoto(step + 1, dataUrl);
       checkingPhoto = false;
+      markCheckResult(step, dataUrl, result);
 
       if (result.ok) {
-        capturedImages[step] = dataUrl;
-        rejectedPhotos[step] = null;
         // 檢查服務沒回應時不顯示「沒問題」，直接放行
         if (result.skipped) showCheckBanner('hidden');
         else showCheckBanner('pass', `✓ 第 ${step + 1} 張沒問題`);
         updateStepUI();
         goToNextStep();
       } else {
-        capturedImages[step] = null;
-        rejectedPhotos[step] = { dataUrl, hint: result.hint };
         selectStep(step);
       }
     }
@@ -1299,6 +1487,7 @@
       lastRetakeViews.forEach(v => {
         capturedImages[v - 1] = null;
         rejectedPhotos[v - 1] = null;
+        photoPassed[v - 1] = false;
         document.getElementById('thumbs-grid').children[v - 1].innerHTML = photoLabels[v - 1];
       });
       startFlow();
