@@ -6,22 +6,21 @@
 - [ ] Environment 設 `PYTHON_VERSION`（本機開發用 3.14，兩邊一致比較保險）
 - [ ] Build Command：`pip install -r requirements.txt`
 - [ ] Start Command：`uvicorn main:app --host 0.0.0.0 --port $PORT`
-- [ ] `demo/` 資料夾的 4 個 json 有一起上傳（示範按鈕要用）
 
 ## 手機實測（iPhone、Android 各一台）
 
 用 Render 的 https 網址開，不要用 http 或區網 IP：手機瀏覽器只有 https 才能開相機。
 
-- [ ] 首頁下方顯示「✓ 伺服器已就緒」
+- [ ] 瀏覽器分頁上的 icon 是藍色方塊、白色取景框、黃色桌子
 - [ ] 按「開始拍照檢測」會跳出相機權限，允許後看得到畫面
-- [ ] 鏡頭畫面上方的光線提示會變色：正常是綠色「☀ 光線充足」，遮住鏡頭變紅色閃爍「🌙 光線太暗」
+- [ ] 拍照畫面右上角的光線提示會變色：正常是綠色「☀ 光線充足」，遮住鏡頭變紅色閃爍「🌙 光線太暗」
 - [ ] 光線太暗時，下方按鈕變灰色「光線太暗，無法拍攝」，按了沒反應；移到亮處後恢復成「拍攝此角度」
-- [ ] 照片 1 的虛線框是桌面形狀（上窄下寬、下面兩條桌腳線），照片 2～5 是 Y 字
+- [ ] 鏡頭畫面左上角用白字標出現在拍第幾張、拍哪裡；下方縮圖現在這張有深藍色粗框
+- [ ] 照片 1 的虛線框是微微的梯形（上邊稍窄），照片 2～5 是 Y 字
 - [ ] 5 張照片拍完，相機會關掉，進到白底的「AI 正在分析照片」畫面，10 秒內拿到結果
 - [ ] 預設模式下首頁和拍照畫面都沒有相簿按鈕
 - [ ] 照片 1 故意拍桌角 → 結果是「照片需要重拍」，按「重拍這幾張照片」只要重拍第 1 張
-- [ ] 結果頁最下面「示範資料」裡的 pass / review / reject / retake 四個按鈕都有照片和結果
-- [ ] 「加入主畫面」後從主畫面打開，相機一樣能用
+- [ ] 「加入主畫面」後主畫面上的 icon 正確，從主畫面打開相機一樣能用
 - [ ] 開飛航模式按送出 → 會顯示「連不到伺服器」，不會一直轉圈；按「取消」會回到拍攝畫面並重新打開相機
 
 ## 開發者模式
@@ -42,32 +41,11 @@
 
 ## 上台前 10 分鐘
 
-- [ ] 用手機打開網址，等首頁顯示「✓ 伺服器已就緒」（Render 免費方案閒置會休眠，叫醒要約一分鐘）
-- [ ] 按一次「範例測試」確認 Gemini 正常
+- [ ] 用手機打開網址，等首頁出現（Render 免費方案閒置會休眠，第一次打開可能要等約一分鐘）
+- [ ] 自己完整拍一次 5 張照片，確認 Gemini 正常、拿得到結果
 - [ ] 確認標題旁沒有紫色「開發者設定」標籤（正式模式）
-- [ ] 萬一 Gemini 掛掉：改用結果頁最下面「示範資料」的按鈕，資料是之前真實跑出來的
-
-## 重新產生示範資料
-
-```bash
-python make_demo.py pass   照片資料夾
-python make_demo.py review 照片資料夾
-python make_demo.py reject 照片資料夾
-python make_demo.py retake 照片1 照片2 照片3 照片4 照片5
-```
-
-資料夾裡要有 `desktop.jpg`、`corner_1.jpg`～`corner_4.jpg`。分析結果跟指定的不同時不會存檔。
-
-目前的示範資料來源（`Desktop/pic_generator/output_ai`）：
-
-| 結果 | 照片 |
-|---|---|
-| pass | surface_wear/level_1_light |
-| review | surface_wear/level_2_medium |
-| reject | water_damage/level_3_heavy |
-| retake | surface_wear/level_1_light，但照片 1 換成 corner_1.jpg |
 
 ## 已知問題
 
-- `test/images` 和 `pic_generator` 的照片裡，corner_1 和 corner_3 是同一張、corner_2 和 corner_4 是同一張。要拍到另外兩個桌角的真實照片才能解決。
+- `test/images` 的照片裡，corner_1 和 corner_3 是同一張、corner_2 和 corner_4 是同一張。這些照片現在只拿來開發測試，網頁不會用到。
 - 後端的 `/check-photo`（單張檢查）現在沒有用到，留著方便之後要再開回來。

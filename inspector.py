@@ -30,7 +30,6 @@ CHECK_TIMEOUT_MS = 10_000   # 單張檢查最多等 10 秒，超過就放行，�
 
 # 照片順序跟前端一致：1 桌面整體，2～5 四個桌角（左前、左後、右後、右前）
 PHOTO_LABELS = ["桌面整體", "左前桌角", "左後桌角", "右後桌角", "右前桌角"]
-PHOTO_FILES = ["desktop.jpg", "corner_1.jpg", "corner_2.jpg", "corner_3.jpg", "corner_4.jpg"]
 
 MAX_ATTEMPTS = 2        # 最多試幾次（第一次 + 重試一次）
 RETRY_WAIT_SECONDS = 2  # 重試前等幾秒
