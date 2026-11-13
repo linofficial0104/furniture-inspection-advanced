@@ -9,6 +9,8 @@ import json
 import time
 from pathlib import Path
 
+import httpx
+
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -90,6 +92,8 @@ def run_inspection(images: list[tuple[bytes, str]]) -> dict:
         result = analyze_photos(images)
     except errors.ServerError:
         raise HTTPException(status_code=503, detail="AI 服務忙碌中，請稍後再試")
+    except httpx.TimeoutException:
+        raise HTTPException(status_code=504, detail="AI 回應太慢，請再試一次")
     except errors.ClientError as e:
         raise HTTPException(status_code=502, detail=f"AI 服務請求失敗：{e.message}")
     except ValueError:

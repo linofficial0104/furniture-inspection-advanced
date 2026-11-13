@@ -6,6 +6,7 @@ import os
 import time
 from pathlib import Path
 
+import httpx
 from dotenv import load_dotenv
 from google import genai
 from google.genai import errors, types
@@ -108,8 +109,8 @@ def analyze_photos(photos: list[tuple[bytes, str]]) -> InspectResult:
             # ValidationError 是 ValueError 的子類別，格式錯誤也會被下面接住
             return InspectResult.model_validate_json(response.text)
 
-        except (errors.ServerError, ValueError) as e:
-            # 5xx 和格式錯誤：可能是暫時的，值得再試
+        except (errors.ServerError, ValueError, httpx.TimeoutException) as e:
+            # 5xx、格式錯誤、逾時：可能是暫時的，值得再試
             last_error = e
             if attempt < MAX_ATTEMPTS:
                 print(f"第 {attempt} 次失敗（{type(e).__name__}），{RETRY_WAIT_SECONDS} 秒後重試")

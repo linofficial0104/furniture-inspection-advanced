@@ -166,29 +166,44 @@
 
     <!-- 相機拍攝頁（全螢幕沉浸式） -->
     <div id="screen-camera" class="hidden flex-1 flex flex-col justify-between bg-neutral-900 text-white overflow-hidden z-30">
-      
+
       <div class="px-4 py-3 bg-white text-neutral-900 border-b border-neutral-200 flex items-center justify-between shrink-0">
-        <button onclick="exitCameraToHome()" class="shrink-0 whitespace-nowrap text-xs font-bold text-neutral-600 px-2 py-1 rounded hover:bg-neutral-100">
+        <button onclick="exitCameraToHome()" class="w-14 shrink-0 whitespace-nowrap text-left text-xs font-bold text-neutral-600 px-2 py-1 rounded hover:bg-neutral-100">
           ← 返回
         </button>
         <div class="text-center">
           <span id="step-badge" class="text-xs font-bold text-[#0058A3] block">照片 1 / 5：桌面整體</span>
           <p id="prompt-text" class="text-xs text-neutral-600 mt-0.5">請由上方或斜上方拍攝完整桌面</p>
         </div>
-        <span id="light-indicator" class="shrink-0 whitespace-nowrap text-xs font-bold text-neutral-500">光線正常</span>
+        <span class="w-14 shrink-0"></span>
       </div>
 
       <div class="relative flex-1 bg-neutral-900 flex items-center justify-center overflow-hidden">
         <video id="video" autoplay playsinline muted class="absolute inset-0 w-full h-full object-cover"></video>
         <canvas id="calc-canvas" class="hidden"></canvas>
 
-        <div class="relative z-10 w-[85%] max-w-[340px] aspect-square pointer-events-none flex items-center justify-center">
-          <svg id="svg-desktop" viewBox="0 0 240 240" class="w-full h-full stroke-white/90 fill-none" stroke-width="2">
-            <rect x="28" y="28" width="184" height="184" rx="8" stroke-dasharray="6,6"/>
-            <line x1="108" y1="120" x2="132" y2="120"/>
-            <line x1="120" y1="108" x2="120" y2="132"/>
-          </svg>
+        <!-- 光線提示：放在鏡頭畫面上方正中間，用顏色區分 -->
+        <div id="light-indicator" class="absolute top-3 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold shadow-lg bg-neutral-700 text-white">相機啟動中…</div>
 
+        <!-- 桌面整體的對準框：照 test/images/desktop.jpg 的桌面形狀描出來（座標就是那張照片的像素）
+             slice 跟影片的 object-cover 一樣會裁切，所以框的位置對應到鏡頭畫面上同樣的位置 -->
+        <svg id="svg-desktop" viewBox="0 0 1536 2752" preserveAspectRatio="xMidYMid slice" class="absolute inset-0 w-full h-full z-10 pointer-events-none fill-none" stroke-linecap="round" stroke-linejoin="round">
+          <!-- 底下一層半透明黑線，在淺色桌面上也看得清楚 -->
+          <g stroke="rgba(0,0,0,0.35)" stroke-width="22">
+            <polygon points="197,268 1342,268 1397,2420 139,2420" />
+            <path d="M 300 2420 L 300 2610 M 1236 2420 L 1236 2610" />
+          </g>
+          <g stroke="rgba(255,255,255,0.9)" stroke-width="10">
+            <polygon points="197,268 1342,268 1397,2420 139,2420" stroke-dasharray="48,34" />
+            <path d="M 300 2420 L 300 2610 M 1236 2420 L 1236 2610" stroke-dasharray="30,24" />
+          </g>
+          <g fill="white" stroke="rgba(0,0,0,0.45)" stroke-width="14" paint-order="stroke" font-size="84" font-weight="700" text-anchor="middle">
+            <text x="768" y="1370">整個桌面對齊虛線框</text>
+            <text x="768" y="2560">桌腳</text>
+          </g>
+        </svg>
+
+        <div class="relative z-10 w-[85%] max-w-[340px] aspect-square pointer-events-none flex items-center justify-center">
           <!-- 桌角對齊用的 Y 字：兩條斜線對齊左右桌邊，直線對齊桌腳，交叉點對準桌角 -->
           <svg id="svg-corner" viewBox="0 0 240 240" class="hidden w-full h-full fill-none" stroke-linecap="round" stroke-linejoin="round">
             <!-- 底下一層半透明黑線，在白色桌面上也看得清楚 -->
@@ -205,17 +220,6 @@
       </div>
 
       <div class="p-4 bg-white text-neutral-900 border-t border-neutral-200 space-y-3 shrink-0 safe-bottom">
-        <!-- 拍照當下的 AI 檢查結果：檢查中 / 通過 / 不通過（附重拍建議） -->
-        <div id="check-banner" class="hidden rounded-xl p-3 text-xs">
-          <div class="flex items-center gap-2">
-            <div id="check-spinner" class="hidden w-4 h-4 shrink-0 border-2 border-[#0058A3] border-t-transparent rounded-full animate-spin"></div>
-            <div id="check-banner-text" class="font-bold leading-relaxed"></div>
-          </div>
-          <div id="check-banner-actions" class="hidden flex gap-2 mt-2.5">
-            <button onclick="retakeRejected()" class="flex-1 py-2 rounded-full ikea-blue text-white font-bold">重拍這張</button>
-            <button id="btn-use-anyway" onclick="useRejectedAnyway()" class="flex-1 py-2 rounded-full bg-white border border-neutral-300 font-bold text-neutral-800">仍然使用</button>
-          </div>
-        </div>
         <div class="grid grid-cols-5 gap-2" id="thumbs-grid">
           <div onclick="selectStep(0)" class="cursor-pointer aspect-square rounded bg-neutral-100 border-2 border-[#0058A3] flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative">1.桌面</div>
           <div onclick="selectStep(1)" class="cursor-pointer aspect-square rounded bg-neutral-100 border border-neutral-200 flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative">2.左前角</div>
@@ -230,7 +234,8 @@
           </button>
           <input type="file" id="single-upload" accept="image/*" class="hidden" onchange="handleSingleUpload(event)">
 
-          <button onclick="triggerCapture()" class="flex-1 py-3 rounded-full font-bold text-xs ikea-blue text-white active:opacity-90">
+          <!-- 光線太暗時停用（文字和顏色由 updateCaptureButton 控制） -->
+          <button id="btn-capture" onclick="triggerCapture()" class="flex-1 py-3 rounded-full font-bold text-xs ikea-blue text-white active:opacity-90">
             拍攝此角度
           </button>
         </div>
@@ -526,62 +531,51 @@
       </div>
     </div>
 
-    <!-- 開發者設定（連點 IKEA 標誌 5 下，或網址加 ?dev 打開）；設定只存在這台裝置的瀏覽器 -->
+    <!-- 開發者設定（連點 IKEA 標誌 5 下打開，要輸入密碼；錯 3 次就停用）；設定只存在這台裝置的瀏覽器 -->
     <div id="dev-modal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center p-4">
       <div class="bg-white w-full max-w-sm rounded-2xl p-5 shadow-xl space-y-4 text-xs">
         <div class="flex justify-between items-center">
           <div>
             <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-700">開發者模式</span>
-            <h3 class="text-sm font-bold text-neutral-900 mt-1">檢測流程設定</h3>
+            <h3 id="dev-title" class="text-sm font-bold text-neutral-900 mt-1">請輸入密碼</h3>
           </div>
           <button onclick="closeDevPanel()" class="text-neutral-400 hover:text-black font-bold">✕</button>
         </div>
 
-        <label class="flex items-start justify-between gap-3 ikea-gray p-3 rounded-xl cursor-pointer">
-          <div>
-            <div class="font-bold text-neutral-900">開放從相簿上傳</div>
-            <div class="text-neutral-500 mt-0.5">關閉時只能用相機現場拍攝</div>
-          </div>
-          <input type="checkbox" id="dev-allow-album" onchange="updateDevSetting()" class="mt-0.5 w-5 h-5 accent-[#0058A3] shrink-0">
-        </label>
-
-        <div class="ikea-gray p-3 rounded-xl space-y-2">
-          <div class="font-bold text-neutral-900">照片檢查方式</div>
-          <label class="flex items-start gap-2 cursor-pointer">
-            <input type="radio" name="dev-check-mode" value="each" onchange="updateDevSetting()" class="mt-0.5 accent-[#0058A3]">
-            <span><b>每拍一張就檢查</b><span class="text-neutral-500">：拍錯馬上知道，每張多等約 2 秒</span></span>
-          </label>
-          <label class="flex items-start gap-2 cursor-pointer">
-            <input type="radio" name="dev-check-mode" value="batch" onchange="updateDevSetting()" class="mt-0.5 accent-[#0058A3]">
-            <span><b>5 張拍完一起檢查</b><span class="text-neutral-500">：拍照不用等，最後一次檢查 5 張</span></span>
-          </label>
-          <label class="flex items-start gap-2 cursor-pointer">
-            <input type="radio" name="dev-check-mode" value="off" onchange="updateDevSetting()" class="mt-0.5 accent-[#0058A3]">
-            <span><b>不檢查</b><span class="text-neutral-500">：直接送出分析（AI 服務不穩時備用）</span></span>
-          </label>
+        <!-- 第一步：輸入密碼 -->
+        <div id="dev-login" class="space-y-3">
+          <input id="dev-password" type="password" inputmode="numeric" autocomplete="off" placeholder="開發者密碼"
+            onkeydown="if (event.key === 'Enter') submitDevPassword()"
+            class="w-full px-4 py-3 rounded-xl border border-neutral-300 text-sm focus:outline-none focus:border-[#0058A3]">
+          <p id="dev-login-error" class="hidden font-bold text-red-600"></p>
+          <button onclick="submitDevPassword()" class="w-full py-2.5 rounded-full bg-neutral-900 text-white font-bold">確認</button>
         </div>
 
-        <label class="flex items-start justify-between gap-3 ikea-gray p-3 rounded-xl cursor-pointer">
-          <div>
-            <div class="font-bold text-neutral-900">AI 判定不行時可「仍然使用」</div>
-            <div class="text-neutral-500 mt-0.5">關閉時沒通過檢查的照片一定要重拍</div>
-          </div>
-          <input type="checkbox" id="dev-allow-anyway" onchange="updateDevSetting()" class="mt-0.5 w-5 h-5 accent-[#0058A3] shrink-0">
-        </label>
+        <!-- 第二步：設定 -->
+        <div id="dev-settings" class="hidden space-y-4">
+          <label class="flex items-start justify-between gap-3 ikea-gray p-3 rounded-xl cursor-pointer">
+            <div>
+              <div class="font-bold text-neutral-900">開放從相簿上傳</div>
+              <div class="text-neutral-500 mt-0.5">關閉時只能用相機現場拍攝</div>
+            </div>
+            <input type="checkbox" id="dev-allow-album" onchange="updateDevSetting()" class="mt-0.5 w-5 h-5 accent-[#0058A3] shrink-0">
+          </label>
 
-        <div class="flex gap-2">
-          <button onclick="resetDevSettings()" class="flex-1 py-2.5 rounded-full border border-neutral-300 font-bold text-neutral-700">恢復預設</button>
-          <button onclick="closeDevPanel()" class="flex-1 py-2.5 rounded-full bg-neutral-900 text-white font-bold">完成</button>
+          <div class="flex gap-2">
+            <button onclick="resetDevSettings()" class="flex-1 py-2.5 rounded-full border border-neutral-300 font-bold text-neutral-700">恢復預設</button>
+            <button onclick="closeDevPanel()" class="flex-1 py-2.5 rounded-full bg-neutral-900 text-white font-bold">完成</button>
+          </div>
+          <p class="text-[10px] text-neutral-400 text-center">設定只存在這台裝置的瀏覽器，不影響其他人</p>
         </div>
-        <p class="text-[10px] text-neutral-400 text-center">設定只存在這台裝置的瀏覽器，不影響其他人</p>
       </div>
     </div>
 
-    <!-- 全域載入畫面 -->
-    <div id="global-loading" class="hidden fixed inset-0 z-50 bg-black/75 flex flex-col items-center justify-center p-6 text-center text-white">
-      <div class="w-9 h-9 border-4 border-[#FFDB00] border-t-transparent rounded-full animate-spin mb-3"></div>
-      <div class="text-sm font-bold">正在分析 5 張家具照片...</div>
-      <div class="text-xs text-neutral-300 mt-1">正在檢查結構、表面磨損與受潮狀況（通常 5～10 秒，AI 忙碌時會自動重試）</div>
+    <!-- 分析中畫面：白底全螢幕，進來前會先關掉相機 -->
+    <div id="global-loading" class="hidden fixed inset-0 z-50 bg-white flex flex-col items-center justify-center p-8 text-center">
+      <div class="w-12 h-12 border-4 border-[#0058A3] border-t-transparent rounded-full animate-spin mb-5"></div>
+      <div class="text-base font-bold text-neutral-900">AI 正在分析照片</div>
+      <div class="text-xs text-neutral-500 mt-1.5 leading-relaxed">正在檢查結構、表面磨損與受潮狀況<br>通常 5～10 秒，請稍候</div>
+      <div id="loading-thumbs" class="grid grid-cols-5 gap-2 w-full max-w-xs mt-6"></div>
     </div>
 
   </div>
@@ -634,11 +628,9 @@
     const capturedImages = [null, null, null, null, null];
 
     // ===== 檢測流程設定（開發者模式可以改）=====
-    // 預設是正式模式：只能現場拍、每張拍完就檢查、沒通過一定要重拍
+    // 預設是正式模式：只能用相機現場拍
     const DEFAULT_SETTINGS = {
-      allowAlbum: false,       // 開放從相簿上傳
-      checkMode: 'each',       // each：每拍一張就檢查 / batch：5 張拍完一起檢查 / off：不檢查
-      allowUseAnyway: false    // AI 判定不行時可「仍然使用」
+      allowAlbum: false        // 開放從相簿上傳
     };
     const SETTINGS_KEY = 'smartinspect-dev-settings';
 
@@ -646,9 +638,7 @@
     function loadSettings() {
       try {
         const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
-        const merged = { ...DEFAULT_SETTINGS, ...saved };
-        if (!['each', 'batch', 'off'].includes(merged.checkMode)) merged.checkMode = DEFAULT_SETTINGS.checkMode;
-        return merged;
+        return { allowAlbum: saved.allowAlbum === true };
       } catch (e) {
         return { ...DEFAULT_SETTINGS };
       }
@@ -674,9 +664,36 @@
       document.getElementById('dev-badge').classList.toggle('hidden', isDefaultSettings());
     }
 
-    // 連點 IKEA 標誌 5 下（每下間隔 1.5 秒內）打開開發者設定
+    // ===== 開發者模式的密碼 =====
+    // 注意：密碼寫在網頁原始碼裡，只能擋一般使用者，懂技術的人看得到
+    const DEV_PASSWORD = '12345';
+    const DEV_MAX_TRIES = 3;
+    const DEV_LOCK_KEY = 'smartinspect-dev-lock';
+    let devUnlocked = false;   // 這次開網頁有沒有輸入過正確密碼（重新整理要重輸）
+
+    // 密碼錯誤次數存在瀏覽器，重新整理也不會歸零
+    function loadDevLock() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(DEV_LOCK_KEY) || '{}');
+        return { fails: Number(saved.fails) || 0 };
+      } catch (e) {
+        return { fails: 0 };
+      }
+    }
+    let devLock = loadDevLock();
+
+    function saveDevLock() {
+      try { localStorage.setItem(DEV_LOCK_KEY, JSON.stringify(devLock)); } catch (e) { /* 存不了就只在這次有效 */ }
+    }
+
+    function isDevLocked() {
+      return devLock.fails >= DEV_MAX_TRIES;
+    }
+
+    // 連點 IKEA 標誌 5 下（每下間隔 1.5 秒內）打開開發者設定；密碼錯 3 次後這個功能就關掉
     let devTapCount = 0, devTapTimer = null;
     function devTap() {
+      if (isDevLocked()) return;
       devTapCount++;
       clearTimeout(devTapTimer);
       devTapTimer = setTimeout(() => { devTapCount = 0; }, 1500);
@@ -687,143 +704,95 @@
     }
 
     function openDevPanel() {
+      if (isDevLocked()) return;
+      document.getElementById('dev-login').classList.toggle('hidden', devUnlocked);
+      document.getElementById('dev-settings').classList.toggle('hidden', !devUnlocked);
+      document.getElementById('dev-title').innerText = devUnlocked ? '檢測流程設定' : '請輸入密碼';
       document.getElementById('dev-allow-album').checked = settings.allowAlbum;
-      document.getElementById('dev-allow-anyway').checked = settings.allowUseAnyway;
-      document.querySelectorAll('input[name="dev-check-mode"]').forEach(r => { r.checked = r.value === settings.checkMode; });
+      const input = document.getElementById('dev-password');
+      input.value = '';
+      document.getElementById('dev-login-error').classList.add('hidden');
       toggleModal('dev-modal', true);
+      if (!devUnlocked) setTimeout(() => input.focus(), 50);
     }
 
     function closeDevPanel() {
       toggleModal('dev-modal', false);
     }
 
+    function submitDevPassword() {
+      if (isDevLocked()) return;
+      const input = document.getElementById('dev-password');
+      const error = document.getElementById('dev-login-error');
+      if (input.value === DEV_PASSWORD) {
+        devLock.fails = 0;
+        saveDevLock();
+        devUnlocked = true;
+        openDevPanel();   // 換成設定畫面
+        return;
+      }
+      devLock.fails++;
+      saveDevLock();
+      input.value = '';
+      if (isDevLocked()) {
+        closeDevPanel();
+        alert('密碼錯誤 3 次，開發者模式已停用');
+        return;
+      }
+      error.innerText = `密碼錯誤，還可以再試 ${DEV_MAX_TRIES - devLock.fails} 次`;
+      error.classList.remove('hidden');
+    }
+
     function updateDevSetting() {
+      if (!devUnlocked) return;
       settings.allowAlbum = document.getElementById('dev-allow-album').checked;
-      settings.allowUseAnyway = document.getElementById('dev-allow-anyway').checked;
-      const mode = document.querySelector('input[name="dev-check-mode"]:checked');
-      if (mode) settings.checkMode = mode.value;
       saveSettings();
       applySettings();
     }
 
     function resetDevSettings() {
+      if (!devUnlocked) return;
       settings = { ...DEFAULT_SETTINGS };
       saveSettings();
       applySettings();
       openDevPanel();   // 更新面板上的勾選狀態
     }
 
-    // ===== 拍照當下的單張檢查 =====
-    // 沒通過檢查的照片先放這裡（{ dataUrl, hint }），使用者選「仍然使用」才放回 capturedImages
-    const rejectedPhotos = [null, null, null, null, null];
-    // 哪幾張已經通過檢查（換新照片就重設），「5 張一起檢查」時只檢查還沒通過的
-    const photoPassed = [false, false, false, false, false];
-    let checkingPhoto = false;   // 檢查中先不能拍下一張
-    const CHECK_TIMEOUT_MS = 12000;
-
-    // 呼叫 /check-photo；出錯或逾時一律放行，送出後的完整分析還會再檢查一次
-    async function checkPhoto(view, dataUrl) {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), CHECK_TIMEOUT_MS);
-      try {
-        const res = await fetch(`${BACKEND_BASE}/check-photo`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ view, image: dataUrl }),
-          signal: controller.signal
-        });
-        if (!res.ok) return { ok: true, skipped: true };
-        return await res.json();
-      } catch (e) {
-        return { ok: true, skipped: true };
-      } finally {
-        clearTimeout(timer);
-      }
-    }
-
-    // 檢查結果提示：checking / pass / fail / hidden
-    let bannerTimer = null;
-    function showCheckBanner(state, text = '') {
-      const banner = document.getElementById('check-banner');
-      clearTimeout(bannerTimer);
-      if (state === 'hidden') { banner.classList.add('hidden'); return; }
-      const styles = {
-        checking: 'bg-neutral-100 text-neutral-700',
-        pass: 'bg-green-50 text-green-800 border border-green-200',
-        fail: 'bg-amber-50 text-amber-900 border border-amber-300'
-      };
-      banner.className = `rounded-xl p-3 text-xs ${styles[state]}`;
-      document.getElementById('check-banner-text').innerText = text;
-      document.getElementById('check-spinner').classList.toggle('hidden', state !== 'checking');
-      document.getElementById('check-banner-actions').classList.toggle('hidden', state !== 'fail');
-      document.getElementById('btn-use-anyway').classList.toggle('hidden', !settings.allowUseAnyway);
-      if (state === 'pass') bannerTimer = setTimeout(() => banner.classList.add('hidden'), 2000);
-    }
-
-    function showRejectedBanner(idx) {
-      showCheckBanner('fail', `第 ${idx + 1} 張需要重拍：${rejectedPhotos[idx].hint}`);
-    }
-
-    // 換到下一張還沒拍（或沒通過）的照片；5 張都好了就送出分析
+    // 換到下一張還沒拍的照片；5 張都拍好就送出分析
     function goToNextStep() {
       const nextEmpty = capturedImages.findIndex(img => img === null);
       if (nextEmpty !== -1) selectStep(nextEmpty);
-      else if (settings.checkMode === 'batch') checkAllThenSubmit();
       else goToResult();
     }
 
-    // 「5 張拍完一起檢查」：同時檢查還沒通過的照片，全部通過才送出分析
-    async function checkAllThenSubmit() {
-      const pending = [0, 1, 2, 3, 4].filter(i => !photoPassed[i] && capturedImages[i]);
-      if (pending.length) {
-        checkingPhoto = true;
-        showCheckBanner('checking', `AI 正在檢查 ${pending.length} 張照片…`);
-        const results = await Promise.all(pending.map(i => checkPhoto(i + 1, capturedImages[i])));
-        checkingPhoto = false;
-        results.forEach((r, k) => markCheckResult(pending[k], capturedImages[pending[k]], r));
-      }
-      const firstRejected = rejectedPhotos.findIndex(r => r);
-      if (firstRejected !== -1) {
-        selectStep(firstRejected);   // 停在第一張沒通過的，顯示重拍建議
-        return;
-      }
-      showCheckBanner('hidden');
-      goToResult();
+    // ===== 光線偵測 =====
+    // ok：正常 / dark：太暗（不能拍） / bright：反光過強 / off：相機沒開
+    let lightState = 'off';
+    const LIGHT_STYLES = {
+      ok:     { text: '☀ 光線充足', cls: 'bg-green-600 text-white' },
+      dark:   { text: '🌙 光線太暗，請開燈或移到明亮處', cls: 'bg-red-600 text-white animate-pulse' },
+      bright: { text: '⚠ 反光過強，請調整角度', cls: 'bg-amber-400 text-neutral-900' },
+      off:    { text: '相機未開啟', cls: 'bg-neutral-700 text-white' }
+    };
+
+    function setLightState(state, text) {
+      lightState = state;
+      const el = document.getElementById('light-indicator');
+      const style = LIGHT_STYLES[state];
+      el.innerText = text || style.text;
+      el.className = `absolute top-3 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold shadow-lg ${style.cls}`;
+      updateCaptureButton();
     }
 
-    // 記錄一張照片的檢查結果：通過放進 capturedImages，沒通過放進 rejectedPhotos
-    function markCheckResult(idx, dataUrl, result) {
-      if (result.ok) {
-        capturedImages[idx] = dataUrl;
-        rejectedPhotos[idx] = null;
-        photoPassed[idx] = true;
-      } else {
-        capturedImages[idx] = null;
-        rejectedPhotos[idx] = { dataUrl, hint: result.hint };
-        photoPassed[idx] = false;
-      }
-    }
-
-    // 不通過時按「重拍這張」：丟掉這張，停在這一步
-    function retakeRejected() {
-      rejectedPhotos[currentStep] = null;
-      photoPassed[currentStep] = false;
-      renderSlotThumb(currentStep, null);
-      showCheckBanner('hidden');
-      updateStepUI();
-    }
-
-    // 不通過時按「仍然使用」：AI 也可能判斷錯，讓使用者自己決定
-    function useRejectedAnyway() {
-      const rejected = rejectedPhotos[currentStep];
-      if (!rejected || !settings.allowUseAnyway) return;
-      capturedImages[currentStep] = rejected.dataUrl;
-      rejectedPhotos[currentStep] = null;
-      photoPassed[currentStep] = true;   // 使用者自己決定保留，不再檢查
-      renderSlotThumb(currentStep, rejected.dataUrl);
-      showCheckBanner('hidden');
-      updateStepUI();
-      goToNextStep();
+    // 光線太暗時停用「拍攝此角度」
+    function updateCaptureButton() {
+      const btn = document.getElementById('btn-capture');
+      const tooDark = lightState === 'dark';
+      btn.disabled = tooDark;
+      btn.innerText = tooDark ? '光線太暗，無法拍攝' : '拍攝此角度';
+      btn.className = tooDark
+        ? 'flex-1 py-3 rounded-full font-bold text-xs bg-neutral-300 text-neutral-500 cursor-not-allowed'
+        : 'flex-1 py-3 rounded-full font-bold text-xs ikea-blue text-white active:opacity-90';
     }
 
     // 相機串流和光線偵測計時器只保留一份，避免重拍時越開越多
@@ -888,12 +857,8 @@
     }
     checkServer();
 
-    // 頁面載入時套用設定；網址有 ?dev 時直接打開開發者設定
+    // 頁面載入時套用設定（開發者模式只能連點 IKEA 標誌 5 下打開）
     applySettings();
-    if (new URLSearchParams(location.search).has('dev')) {
-      toggleModal('guide-modal', false);
-      openDevPanel();
-    }
 
     function stopCamera() {
       if (lightTimer) { clearInterval(lightTimer); lightTimer = null; }
@@ -902,6 +867,7 @@
         cameraStream = null;
       }
       document.getElementById('video').srcObject = null;
+      setLightState('off');
     }
 
     function showScreen(name) {
@@ -931,11 +897,8 @@
     // 結果頁的「完成並返回首頁」：清空照片，下次重新開始
     function finishAndGoHome() {
       capturedImages.fill(null);
-      rejectedPhotos.fill(null);
-      photoPassed.fill(false);
       lastRetakeViews = [];
       for (let i = 0; i < 5; i++) renderSlotThumb(i, null);
-      showCheckBanner('hidden');
       selectStep(0);
       switchMainTab('home');
     }
@@ -974,6 +937,7 @@
 
     async function testBackendFolderImages() {
       const loading = document.getElementById('global-loading');
+      document.getElementById('loading-thumbs').innerHTML = '';
       loading.classList.remove('hidden');
       try {
         const res = await fetchWithTimeout(`${BACKEND_BASE}/analyze-test-images`);
@@ -996,6 +960,7 @@
     async function startFlow() {
       showScreen('camera');
       if (cameraStream) return;  // 相機已經開著就不重複開
+      setLightState('off', '相機啟動中…');
       try {
         cameraStream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 960 } },
@@ -1010,7 +975,7 @@
         startLightMonitor();
       } catch (err) {
         cameraStream = null;
-        document.getElementById('light-indicator').innerText = settings.allowAlbum ? "相簿上傳模式" : "相機未開啟";
+        setLightState('off', settings.allowAlbum ? '相機未開啟，可從相簿選圖' : '相機未開啟，請允許使用相機');
       }
     }
 
@@ -1018,7 +983,6 @@
       const video = document.getElementById('video');
       const canvas = document.getElementById('calc-canvas');
       const ctx = canvas.getContext('2d');
-      const indicator = document.getElementById('light-indicator');
 
       if (lightTimer) clearInterval(lightTimer);
       lightTimer = setInterval(() => {
@@ -1031,9 +995,8 @@
           sum += (0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2]);
         }
         const avg = sum / 2500;
-        if (avg < 55) indicator.innerText = "光線偏暗";
-        else if (avg > 225) indicator.innerText = "反光過強";
-        else indicator.innerText = "光線正常";
+        const state = avg < 55 ? 'dark' : avg > 225 ? 'bright' : 'ok';
+        if (state !== lightState) setLightState(state);
       }, 700);
     }
 
@@ -1061,14 +1024,6 @@
       for (let i = 0; i < 5; i++) {
         slots[i].classList.toggle('border-2', i === currentStep);
         slots[i].classList.toggle('border-[#0058A3]', i === currentStep);
-        // 沒通過檢查的照片加紅框
-        slots[i].classList.toggle('ring-2', !!rejectedPhotos[i]);
-        slots[i].classList.toggle('ring-red-500', !!rejectedPhotos[i]);
-      }
-      // 切到沒通過的那張時，顯示它的重拍建議
-      if (!checkingPhoto) {
-        if (rejectedPhotos[currentStep]) showRejectedBanner(currentStep);
-        else if (!document.getElementById('check-banner').className.includes('green')) showCheckBanner('hidden');
       }
     }
 
@@ -1100,7 +1055,7 @@
     }
 
     function triggerCapture() {
-      if (checkingPhoto) return;
+      if (lightState === 'dark') return;   // 光線太暗不給拍
       const video = document.getElementById('video');
       const canvas = document.getElementById('calc-canvas');
       const ctx = canvas.getContext('2d');
@@ -1122,9 +1077,9 @@
     async function handleSingleUpload(event) {
       const file = event.target.files[0];
       event.target.value = '';
-      if (!file || checkingPhoto || !settings.allowAlbum) return;
+      if (!file || !settings.allowAlbum) return;
       try {
-        await saveStepImage(await compressImageFile(file));
+        saveStepImage(await compressImageFile(file));
       } catch (e) {
         alert(e.message);
       }
@@ -1136,41 +1091,24 @@
       if (!files.length || !settings.allowAlbum) return;
 
       showScreen('camera');
-      const loaded = [];
       try {
         for (let idx = 0; idx < files.length; idx++) {
           const compressed = await compressImageFile(files[idx]);
           renderSlotThumb(idx, compressed);
           capturedImages[idx] = compressed;
-          rejectedPhotos[idx] = null;
-          photoPassed[idx] = false;
-          loaded.push([idx, compressed]);
         }
       } catch (e) {
         alert(e.message);
       }
 
-      // 「每拍一張就檢查」模式：選完馬上檢查（同時送出，大約跟檢查一張一樣快）
-      // 「5 張一起檢查」模式：等 5 張都齊了，由 goToNextStep 統一檢查
-      if (settings.checkMode === 'each' && loaded.length) {
-        checkingPhoto = true;
-        showCheckBanner('checking', `AI 正在檢查 ${loaded.length} 張照片…`);
-        const results = await Promise.all(loaded.map(([idx, url]) => checkPhoto(idx + 1, url)));
-        checkingPhoto = false;
-        results.forEach((r, i) => markCheckResult(loaded[i][0], loaded[i][1], r));
-      }
-
-      const firstRejected = rejectedPhotos.findIndex(r => r);
       const nextEmpty = capturedImages.findIndex(img => img === null);
       if (nextEmpty === -1) {
-        showCheckBanner('hidden');
-        goToNextStep();   // 依檢查方式：直接分析，或先一起檢查
+        goToResult();
         return;
       }
-      // 有照片沒通過或不足 5 張：留在拍攝畫面補拍（順便開相機）
+      // 不足 5 張：留在拍攝畫面補拍（順便開相機）
       startFlow();
-      selectStep(firstRejected !== -1 ? firstRejected : nextEmpty);
-      if (firstRejected === -1 && settings.checkMode === 'each') showCheckBanner('pass', `✓ ${loaded.length} 張照片都沒問題，請補拍剩下的照片`);
+      selectStep(nextEmpty);
     }
 
     function renderSlotThumb(idx, dataUrl) {
@@ -1180,36 +1118,11 @@
         : photoLabels[idx];   // 沒有照片時顯示這格的名稱
     }
 
-    // 拍好一張：先給 AI 檢查，通過才進下一張；不通過就顯示重拍建議
-    async function saveStepImage(dataUrl) {
-      const step = currentStep;
-      renderSlotThumb(step, dataUrl);
-      photoPassed[step] = false;   // 換了新照片，要重新檢查
-
-      // 「5 張一起檢查」或「不檢查」：先收下，直接拍下一張
-      if (settings.checkMode !== 'each') {
-        capturedImages[step] = dataUrl;
-        rejectedPhotos[step] = null;
-        updateStepUI();
-        goToNextStep();
-        return;
-      }
-
-      checkingPhoto = true;
-      showCheckBanner('checking', `AI 正在檢查第 ${step + 1} 張照片…`);
-      const result = await checkPhoto(step + 1, dataUrl);
-      checkingPhoto = false;
-      markCheckResult(step, dataUrl, result);
-
-      if (result.ok) {
-        // 檢查服務沒回應時不顯示「沒問題」，直接放行
-        if (result.skipped) showCheckBanner('hidden');
-        else showCheckBanner('pass', `✓ 第 ${step + 1} 張沒問題`);
-        updateStepUI();
-        goToNextStep();
-      } else {
-        selectStep(step);
-      }
+    // 拍好一張：收下來，換下一張；5 張都拍好就送出分析
+    function saveStepImage(dataUrl) {
+      capturedImages[currentStep] = dataUrl;
+      renderSlotThumb(currentStep, dataUrl);
+      goToNextStep();
     }
 
     function renderResultThumbnails() {
@@ -1222,7 +1135,12 @@
     }
 
     async function goToResult() {
+      stopCamera();
       const loading = document.getElementById('global-loading');
+      document.getElementById('loading-thumbs').innerHTML = capturedImages.map(img => `
+        <div class="aspect-square rounded-lg bg-neutral-100 border border-neutral-200 overflow-hidden">
+          ${img ? `<img src="${img}" class="w-full h-full object-cover"/>` : ''}
+        </div>`).join('');
       loading.classList.remove('hidden');
       renderResultThumbnails();
 
@@ -1235,7 +1153,6 @@
         if (!res.ok) throw new Error(await readErrorMessage(res));
         const realData = await res.json();
         loading.classList.add('hidden');
-        stopCamera();
         showScreen('result');
         renderInspectResult(realData);
       } catch (e) {
@@ -1243,6 +1160,8 @@
         // 照片都還在，直接讓使用者選擇重送，不用重拍
         if (confirm(`分析失敗：${e.message}\n\n要用同樣的 5 張照片重新送出嗎？\n（按「取消」可點縮圖重拍某一張）`)) {
           goToResult();
+        } else {
+          startFlow();   // 回到拍攝畫面，重新開相機
         }
       }
     }
@@ -1486,8 +1405,6 @@
       if (!lastRetakeViews.length) lastRetakeViews = [1, 2, 3, 4, 5];
       lastRetakeViews.forEach(v => {
         capturedImages[v - 1] = null;
-        rejectedPhotos[v - 1] = null;
-        photoPassed[v - 1] = false;
         document.getElementById('thumbs-grid').children[v - 1].innerHTML = photoLabels[v - 1];
       });
       startFlow();
