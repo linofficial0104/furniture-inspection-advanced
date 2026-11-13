@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#FFFFFF">
+  <title>智鑑家具 | 二手家具遠端智慧質檢</title>
+  <!-- 分頁 icon（藍底黃桌子＋勾勾），直接內嵌，伺服器不需要另外提供圖檔 -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230058A3'/><rect x='10' y='26' width='44' height='7' rx='2' fill='%23FFDB00'/><rect x='14' y='33' width='5' height='19' fill='%23FFDB00'/><rect x='45' y='33' width='5' height='19' fill='%23FFDB00'/><circle cx='48' cy='16' r='10' fill='white'/><path d='M42.5 16l4 4 7-8' fill='none' stroke='%230058A3' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+  <!-- iPhone「加入主畫面」用的 icon（iOS 不支援 SVG，所以用 PNG） -->
+  <link rel="apple-touch-icon" href="data:image/png;base64,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">
+  <meta name="apple-mobile-web-app-title" content="智鑑家具">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      box-sizing: border-box;
+    }
+    html, body {
+      font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #EBEBEB;
+      color: #111111;
+      overscroll-behavior-y: none;
+      margin: 0;
+      padding: 0;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .app-shell {
+      width: 100%;
+      max-width: 430px;
+      height: 100dvh;
+      background-color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 24px rgba(0,0,0,0.08);
+    }
+    .ikea-blue { background-color: #0058A3; }
+    .ikea-yellow { background-color: #FFDB00; }
+    .ikea-gray { background-color: #F5F5F5; }
+    .safe-bottom {
+      padding-bottom: max(0.6rem, env(safe-area-inset-bottom));
+    }
+  </style>
+</head>
+<body class="w-screen h-[100dvh] flex justify-center select-none overflow-hidden">
+
+  <div class="app-shell">
+
+    <!-- 頂部導覽列 -->
+    <header id="app-header" class="px-5 h-14 bg-white border-b border-neutral-200 flex items-center justify-between shrink-0 z-20">
+      <div class="flex items-center gap-2">
+        <div class="ikea-blue px-2 py-0.5 rounded font-black text-xs tracking-wider text-[#FFDB00]">IKEA</div>
+        <span class="text-sm font-bold text-neutral-900">智鑑家具</span>
+      </div>
+      <button onclick="toggleModal('ios-modal', true)" class="text-xs font-medium text-[#0058A3] active:opacity-70">
+        加入主畫面
+      </button>
+    </header>
+
+    <!-- 分頁 1：質檢首頁（精簡直覺版） -->
+    <main id="screen-home" class="flex-1 flex flex-col justify-between p-6 overflow-y-auto no-scrollbar">
+      <div class="space-y-5">
+        <div>
+          <span class="inline-block text-xs font-bold text-[#0058A3]">二手家具線上收購評估</span>
+          <h1 class="text-2xl font-bold text-neutral-900 mt-1">拍 5 張照，立即試算收購價</h1>
+          <p class="text-xs text-neutral-500 mt-1.5 leading-relaxed">
+            透過標準視角引導拍攝，出門前先確認家具狀況與預估折價券金額，免去白跑一趟門市的麻煩。
+          </p>
+        </div>
+
+        <!-- 乾淨單一資訊卡 -->
+        <div class="ikea-gray p-5 rounded-2xl space-y-4">
+          <div class="flex justify-between items-center border-b border-neutral-200/80 pb-3.5">
+            <div>
+              <div class="text-xs text-neutral-500">檢測品項</div>
+              <div class="text-base font-bold text-neutral-900 mt-0.5">IKEA LACK 方桌 / 邊桌</div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-neutral-500">最高收購價</div>
+              <div class="text-base font-black text-[#0058A3] mt-0.5">NT$ 1,000</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="text-xs font-bold text-neutral-700 mb-2.5">系統將自動檢視以下 3 個項目：</div>
+            <div class="grid grid-cols-3 gap-2 text-center">
+              <div class="bg-white p-3 rounded-xl border border-neutral-200/60">
+                <div class="text-xs font-bold text-neutral-900">結構穩定</div>
+                <div class="text-[11px] text-neutral-500 mt-0.5">桌腳與接縫</div>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-neutral-200/60">
+                <div class="text-xs font-bold text-neutral-900">表面磨損</div>
+                <div class="text-[11px] text-neutral-500 mt-0.5">刮痕與掉漆</div>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-neutral-200/60">
+                <div class="text-xs font-bold text-neutral-900">材質受潮</div>
+                <div class="text-[11px] text-neutral-500 mt-0.5">水漬與起泡</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部操作按鈕區 -->
+      <div class="pt-4 space-y-2.5">
+        <button onclick="startFlow()" class="w-full py-3.5 rounded-full font-bold text-sm ikea-blue text-white active:opacity-90 transition">
+          開始拍照檢測
+        </button>
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="document.getElementById('batch-upload').click()" class="col-span-2 py-3 rounded-full font-bold text-xs bg-white text-neutral-900 border border-neutral-300 active:bg-neutral-100 transition">
+            從相簿選取 5 張照片
+          </button>
+          <button onclick="testBackendFolderImages()" class="col-span-1 py-3 rounded-full font-bold text-xs ikea-gray text-neutral-700 active:bg-neutral-200 transition">
+            範例測試
+          </button>
+        </div>
+        <input type="file" id="batch-upload" accept="image/*" multiple class="hidden" onchange="handleBatchUpload(event)">
+        <div id="server-status" class="text-center text-[11px] text-neutral-400 pt-1">正在連線伺服器…</div>
+      </div>
+    </main>
+
+    <!-- 分頁 2：專案理念（獨立頁面，非彈窗） -->
+    <section id="screen-about" class="hidden flex-1 overflow-y-auto no-scrollbar p-6 space-y-4 bg-white">
+      <div>
+        <span class="text-xs font-bold text-[#0058A3]">2026 永續智慧創新黑客松</span>
+        <h2 class="text-xl font-bold text-neutral-900 mt-1">專案靈感與開發團隊</h2>
+      </div>
+
+      <div class="ikea-gray p-4 rounded-2xl space-y-1.5">
+        <div class="text-sm font-bold text-neutral-900">為什麼我們要做「智鑑家具」？</div>
+        <p class="text-xs text-neutral-600 leading-relaxed">
+          二手家具回購難以普及，最大的困難在於「人工審核與派車收件成本太高」。民眾隨手拍的照片常因光線昏暗、角度不一，讓客服難以估價；若大老遠搬去門市或派車到府，才發現木板受潮膨脹而退貨，不僅浪費車趟排碳，也容易引發消費爭執。
+        </p>
+      </div>
+
+      <div class="ikea-gray p-4 rounded-2xl space-y-1.5">
+        <div class="text-sm font-bold text-neutral-900">核心做法：在拍照當下把關品質</div>
+        <p class="text-xs text-neutral-600 leading-relaxed">
+          我們透過手機畫面上的光線提示與對齊框，引導民眾拍出規格統一的「1 張桌面＋4 張桌角」照片。接著由後端 Gemini 模型協助檢查結構、磨損與受潮狀況，再透過固定公式計算折價券金額並分為三級處理（直接收購、補拍轉人工、或引導維修與環保清運）。
+        </p>
+      </div>
+
+      <div class="border border-neutral-200 p-4 rounded-2xl space-y-2">
+        <div class="text-sm font-bold text-neutral-900">開發團隊：猴子樂園 (Monkeys World)</div>
+        <div class="text-xs text-neutral-500">國立臺灣科技大學｜資通科技國際學士學位學程 / 電資學士班</div>
+        <div class="pt-1 text-xs text-neutral-800 font-bold leading-relaxed">
+          林承翰、蕭宇臻、張瑋家、陳均碩、葉宇森、陳宥廷、陳宥羲
+        </div>
+      </div>
+    </section>
+
+    <!-- 相機拍攝頁（全螢幕沉浸式） -->
+    <div id="screen-camera" class="hidden flex-1 flex flex-col justify-between bg-neutral-900 text-white overflow-hidden z-30">
+      
+      <div class="px-4 py-3 bg-white text-neutral-900 border-b border-neutral-200 flex items-center justify-between shrink-0">
+        <button onclick="exitCameraToHome()" class="shrink-0 whitespace-nowrap text-xs font-bold text-neutral-600 px-2 py-1 rounded hover:bg-neutral-100">
+          ← 返回
+        </button>
+        <div class="text-center">
+          <span id="step-badge" class="text-xs font-bold text-[#0058A3] block">照片 1 / 5：桌面整體</span>
+          <p id="prompt-text" class="text-xs text-neutral-600 mt-0.5">請由上方或斜上方拍攝完整桌面</p>
+        </div>
+        <span id="light-indicator" class="shrink-0 whitespace-nowrap text-xs font-bold text-neutral-500">光線正常</span>
+      </div>
+
+      <div class="relative flex-1 bg-neutral-900 flex items-center justify-center overflow-hidden">
+        <video id="video" autoplay playsinline muted class="absolute inset-0 w-full h-full object-cover"></video>
+        <canvas id="calc-canvas" class="hidden"></canvas>
+
+        <div class="relative z-10 w-[85%] max-w-[340px] aspect-square pointer-events-none flex items-center justify-center">
+          <svg id="svg-desktop" viewBox="0 0 240 240" class="w-full h-full stroke-white/90 fill-none" stroke-width="2">
+            <rect x="28" y="28" width="184" height="184" rx="8" stroke-dasharray="6,6"/>
+            <line x1="108" y1="120" x2="132" y2="120"/>
+            <line x1="120" y1="108" x2="120" y2="132"/>
+          </svg>
+
+          <!-- 桌角對齊用的 Y 字：兩條斜線對齊左右桌邊，直線對齊桌腳，交叉點對準桌角 -->
+          <svg id="svg-corner" viewBox="0 0 240 240" class="hidden w-full h-full fill-none" stroke-linecap="round" stroke-linejoin="round">
+            <!-- 底下一層半透明黑線，在白色桌面上也看得清楚 -->
+            <path d="M 15 62 L 120 108 L 225 62 M 120 108 L 120 232" stroke="rgba(0,0,0,0.35)" stroke-width="5" />
+            <path d="M 15 62 L 120 108 L 225 62 M 120 108 L 120 232" stroke="rgba(255,255,255,0.9)" stroke-width="2.5" stroke-dasharray="8,6" />
+            <circle cx="120" cy="108" r="6" fill="#FFDB00" stroke="rgba(0,0,0,0.35)" stroke-width="2" />
+            <g fill="white" stroke="rgba(0,0,0,0.45)" stroke-width="3" paint-order="stroke" font-size="11" font-weight="700" text-anchor="middle">
+              <text x="48" y="96">桌邊</text>
+              <text x="192" y="96">桌邊</text>
+              <text x="142" y="205">桌腳</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="p-4 bg-white text-neutral-900 border-t border-neutral-200 space-y-3 shrink-0 safe-bottom">
+        <!-- 拍照當下的 AI 檢查結果：檢查中 / 通過 / 不通過（附重拍建議） -->
+        <div id="check-banner" class="hidden rounded-xl p-3 text-xs">
+          <div class="flex items-center gap-2">
+            <div id="check-spinner" class="hidden w-4 h-4 shrink-0 border-2 border-[#0058A3] border-t-transparent rounded-full animate-spin"></div>
+            <div id="check-banner-text" class="font-bold leading-relaxed"></div>
+          </div>
+          <div id="check-banner-actions" class="hidden flex gap-2 mt-2.5">
+            <button onclick="retakeRejected()" class="flex-1 py-2 rounded-full ikea-blue text-white font-bold">重拍這張</button>
+            <button onclick="useRejectedAnyway()" class="flex-1 py-2 rounded-full bg-white border border-neutral-300 font-bold text-neutral-800">仍然使用</button>
+          </div>
+        </div>
+        <div class="grid grid-cols-5 gap-2" id="thumbs-grid">
+          <div onclick="selectStep(0)" class="cursor-pointer aspect-square rounded bg-neutral-100 border-2 border-[#0058A3] flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative">1.桌面</div>
+          <div onclick="selectStep(1)" class="cursor-pointer aspect-square rounded bg-neutral-100 border border-neutral-200 flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative">2.左前角</div>
+          <div onclick="selectStep(2)" class="cursor-pointer aspect-square rounded bg-neutral-100 border border-neutral-200 flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative">3.左後角</div>
+          <div onclick="selectStep(3)" class="cursor-pointer aspect-square rounded bg-neutral-100 border border-neutral-200 flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative">4.右後角</div>
+          <div onclick="selectStep(4)" class="cursor-pointer aspect-square rounded bg-neutral-100 border border-neutral-200 flex items-center justify-center text-[11px] font-medium text-neutral-500 overflow-hidden relative">5.右前角</div>
+        </div>
+
+        <div class="flex gap-2.5">
+          <button onclick="document.getElementById('single-upload').click()" class="flex-1 py-3 rounded-full font-bold text-xs bg-white text-neutral-900 border border-neutral-400 active:bg-neutral-100">
+            從相簿選圖
+          </button>
+          <input type="file" id="single-upload" accept="image/*" class="hidden" onchange="handleSingleUpload(event)">
+
+          <button onclick="triggerCapture()" class="flex-1 py-3 rounded-full font-bold text-xs ikea-blue text-white active:opacity-90">
+            拍攝此角度
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 檢測結果頁（已移除多餘標題與假編號） -->
+    <div id="screen-result" class="hidden flex-1 flex flex-col justify-between p-5 bg-white overflow-y-auto no-scrollbar">
+      <div class="space-y-4">
+
+        <!-- 主結果卡片 -->
+        <div class="ikea-gray p-5 rounded-xl border-l-4 border-[#0058A3]" id="result-card">
+          <div class="flex justify-between items-center">
+            <span id="result-badge" class="text-xs font-bold px-2.5 py-0.5 rounded bg-[#0058A3] text-white">符合收購標準</span>
+            <span id="confidence-tag" class="text-xs text-neutral-500">把握度：92%</span>
+          </div>
+          <div class="mt-3 flex items-end justify-between gap-3">
+            <div>
+              <div class="text-xs text-neutral-500">預估收購價值</div>
+              <div id="result-title" class="text-3xl font-black text-neutral-900 mt-0.5 whitespace-nowrap">NT$ 450</div>
+            </div>
+            <span id="price-formula" class="text-[11px] text-neutral-500 text-right leading-snug pb-1">基準 $500 - 輕微磨損 $50</span>
+          </div>
+          <p id="result-desc" class="text-xs text-neutral-700 mt-3 leading-relaxed font-medium"></p>
+          <p id="retake-box" class="hidden text-xs text-amber-800 bg-amber-100/80 border border-amber-300 rounded p-2 mt-2"></p>
+          <p id="demo-note" class="hidden text-[11px] text-neutral-400 mt-2"></p>
+        </div>
+
+        <!-- RETAKE 專屬：重拍指定照片 -->
+        <div id="action-retake" class="hidden border border-neutral-300 rounded-xl p-4 space-y-3 bg-white">
+          <div>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-neutral-800 text-white">照片需要重拍</span>
+            <h4 class="text-sm font-bold text-neutral-900 mt-1.5">部分照片無法判斷，請重拍標示的照片</h4>
+            <p id="retake-views-text" class="text-xs text-neutral-600 mt-0.5 leading-relaxed whitespace-pre-line"></p>
+          </div>
+          <button id="btn-retake" onclick="startRetake()" class="w-full py-2.5 rounded-full ikea-blue text-white font-bold text-xs">重拍這幾張照片</button>
+        </div>
+
+        <!-- PASS 專屬：低碳自送獎勵與門市導航 -->
+        <div id="action-pass" class="hidden border border-neutral-200 rounded-xl p-4 space-y-3 bg-white">
+          <div>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded ikea-yellow text-neutral-900">🌱 低碳自送獎勵 +$50</span>
+            <h4 class="text-sm font-bold text-neutral-900 mt-1.5">親送至 IKEA 門市可獲 NT$ <span id="self-drop-price">500</span> 折價券</h4>
+            <p class="text-xs text-neutral-600 mt-0.5 leading-relaxed">免除專車到府收件的逆向物流碳排，將家具順路載至門市「特價品區 (AS-IS)」櫃檯即可現場核發。</p>
+          </div>
+
+          <div class="pt-2 border-t border-neutral-100 space-y-2">
+            <div class="text-xs font-bold text-neutral-800">全台收購服務門市一覽：</div>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <a href="https://maps.google.com/?q=IKEA宜家家居內湖店" target="_blank" class="ikea-gray p-2.5 rounded-lg hover:bg-neutral-200 flex justify-between items-center">
+                <span>台北內湖店</span><span class="text-[#0058A3] font-bold">導航</span>
+              </a>
+              <a href="https://maps.google.com/?q=IKEA宜家家居新莊店" target="_blank" class="ikea-gray p-2.5 rounded-lg hover:bg-neutral-200 flex justify-between items-center">
+                <span>新北新莊店</span><span class="text-[#0058A3] font-bold">導航</span>
+              </a>
+              <a href="https://maps.google.com/?q=IKEA宜家家居新店店" target="_blank" class="ikea-gray p-2.5 rounded-lg hover:bg-neutral-200 flex justify-between items-center">
+                <span>新北新店店</span><span class="text-[#0058A3] font-bold">導航</span>
+              </a>
+              <a href="https://maps.google.com/?q=IKEA宜家家居桃園店" target="_blank" class="ikea-gray p-2.5 rounded-lg hover:bg-neutral-200 flex justify-between items-center">
+                <span>桃園青埔店</span><span class="text-[#0058A3] font-bold">導航</span>
+              </a>
+              <a href="https://maps.google.com/?q=IKEA宜家家居台中店" target="_blank" class="ikea-gray p-2.5 rounded-lg hover:bg-neutral-200 flex justify-between items-center">
+                <span>台中南屯店</span><span class="text-[#0058A3] font-bold">導航</span>
+              </a>
+              <a href="https://maps.google.com/?q=IKEA宜家家居高雄店" target="_blank" class="ikea-gray p-2.5 rounded-lg hover:bg-neutral-200 flex justify-between items-center">
+                <span>高雄前鎮店</span><span class="text-[#0058A3] font-bold">導航</span>
+              </a>
+            </div>
+            <div class="text-[11px] text-neutral-500 pt-1">客服專線：412-8869（手機撥打請加 02）｜服務時間 9:00 - 18:00</div>
+          </div>
+        </div>
+
+        <!-- REVIEW 專屬：補拍特寫 -->
+        <div id="action-review" class="hidden border border-amber-300 bg-amber-50/50 rounded-xl p-4 space-y-3">
+          <div>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-amber-400 text-neutral-900">協助專員快速判定</span>
+            <h4 class="text-sm font-bold text-neutral-900 mt-1.5">請針對系統標記之疑點部位補拍特寫或短片</h4>
+            <p class="text-xs text-neutral-600 mt-0.5 leading-relaxed">補傳局部近照或 2 秒輕晃短片可加速人工複核，避免將家具白跑載至門市後遭驗退：</p>
+          </div>
+          <div id="review-defect-prompts" class="space-y-2 text-xs"></div>
+          <div id="extra-thumbs" class="flex gap-2 flex-wrap"></div>
+          <input type="file" id="extra-upload" accept="image/*,video/*" multiple class="hidden" onchange="handleExtraUpload(event)">
+          <div class="flex gap-2">
+            <button onclick="document.getElementById('extra-upload').click()" class="flex-1 py-2.5 rounded-full bg-white border border-neutral-400 font-bold text-xs text-neutral-900">
+              ＋ 補傳近照 / 2秒短片
+            </button>
+            <button onclick="submitHumanReview()" id="btn-submit-review" class="flex-1 py-2.5 rounded-full ikea-blue text-white font-bold text-xs">
+              送出人工審核
+            </button>
+          </div>
+        </div>
+
+        <!-- REJECT 專屬：維修與清運分流 -->
+        <div id="action-reject" class="hidden border border-neutral-200 rounded-xl p-4 space-y-3 bg-white">
+          <div>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-neutral-200 text-neutral-800">永續循環替代方案</span>
+            <h4 class="text-sm font-bold text-neutral-900 mt-1.5">此家具不符二手收購，建議採行以下管道：</h4>
+          </div>
+          <div class="space-y-2 text-xs">
+            <div class="ikea-gray p-3 rounded-lg">
+              <div class="font-bold text-neutral-900">1. 申請 IKEA 免費五金零件 / 局部維修</div>
+              <p class="text-neutral-600 mt-0.5">若您希望留用家具，可至門市客服櫃檯索取替換螺絲與木榫，或洽詢局部零件維修。</p>
+            </div>
+            <div class="ikea-gray p-3 rounded-lg flex justify-between items-center gap-2">
+              <div>
+                <div class="font-bold text-neutral-900">2. 各縣市環保局大型廢棄物預約清運</div>
+                <p class="text-neutral-600 mt-0.5">板材受潮或嚴重破損請撥打 <b>1999 市民專線</b>，或透過環境部資源循環署網站預約免費到府清運。</p>
+              </div>
+              <a href="https://recycle.moenv.gov.tw/" target="_blank" class="shrink-0 px-3 py-1.5 rounded-full bg-neutral-900 text-white font-bold">前往預約</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 張檢驗照片 -->
+        <div>
+          <div class="text-xs font-bold text-neutral-700 mb-2">5 張檢驗照片</div>
+          <div id="result-thumbs" class="grid grid-cols-5 gap-2"></div>
+        </div>
+
+        <!-- 三大維度評分 -->
+        <div class="ikea-gray p-4 rounded-xl space-y-3">
+          <div class="text-xs font-bold text-neutral-800">三大維度評分（0 完好 ～ 4 報廢）</div>
+          
+          <div class="bg-white p-3 rounded-lg border border-neutral-200/80">
+            <div class="flex justify-between text-xs">
+              <span class="font-bold text-neutral-800">1. 結構完整性</span>
+              <span id="score-structure" class="font-bold text-[#0058A3]">0 級（良好）</span>
+            </div>
+            <p id="note-structure" class="text-xs text-neutral-500 mt-1"></p>
+          </div>
+
+          <div class="bg-white p-3 rounded-lg border border-neutral-200/80">
+            <div class="flex justify-between text-xs">
+              <span class="font-bold text-neutral-800">2. 表面磨損</span>
+              <span id="score-surface" class="font-bold text-[#0058A3]">1 級（輕微）</span>
+            </div>
+            <p id="note-surface" class="text-xs text-neutral-500 mt-1"></p>
+          </div>
+
+          <div class="bg-white p-3 rounded-lg border border-neutral-200/80">
+            <div class="flex justify-between text-xs">
+              <span class="font-bold text-neutral-800">3. 受潮狀況</span>
+              <span id="score-water" class="font-bold text-[#0058A3]">0 級（良好）</span>
+            </div>
+            <p id="note-water" class="text-xs text-neutral-500 mt-1"></p>
+          </div>
+        </div>
+
+        <!-- 缺陷清單 -->
+        <div id="defects-section" class="ikea-gray p-4 rounded-xl space-y-2">
+          <div class="text-xs font-bold text-neutral-800">偵測到的缺陷清單</div>
+          <div id="defects-list" class="space-y-1.5 text-xs"></div>
+        </div>
+
+        <details class="ikea-gray rounded-xl p-3 text-xs">
+          <summary class="font-bold text-neutral-600 cursor-pointer">檢視 JSON</summary>
+          <pre id="json-viewer" class="mt-2 p-3 rounded-lg bg-white border border-neutral-200 text-neutral-800 font-mono text-[11px] overflow-x-auto"></pre>
+        </details>
+
+        <details class="ikea-gray rounded-xl p-3 text-xs">
+          <summary class="font-bold text-neutral-600 cursor-pointer">示範資料</summary>
+          <div class="mt-2 grid grid-cols-4 gap-2">
+            <button onclick="switchResult('pass')" class="py-1.5 rounded-lg bg-white border border-neutral-200 font-medium text-neutral-800">pass</button>
+            <button onclick="switchResult('review')" class="py-1.5 rounded-lg bg-white border border-neutral-200 font-medium text-neutral-800">review</button>
+            <button onclick="switchResult('reject')" class="py-1.5 rounded-lg bg-white border border-neutral-200 font-medium text-neutral-800">reject</button>
+            <button onclick="switchResult('retake')" class="py-1.5 rounded-lg bg-white border border-neutral-200 font-medium text-neutral-800">retake</button>
+          </div>
+        </details>
+      </div>
+
+      <button onclick="finishAndGoHome()" class="w-full py-3.5 mt-5 rounded-full bg-neutral-900 text-white font-bold text-sm">
+        完成並返回首頁
+      </button>
+    </div>
+
+    <!-- 底部 App 導覽列 -->
+    <nav id="app-bottom-nav" class="bg-white border-t border-neutral-200 px-6 py-2 flex justify-around items-center shrink-0 safe-bottom z-20">
+      <button id="nav-home" onclick="switchMainTab('home')" class="flex flex-col items-center gap-1 text-[#0058A3]">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+        </svg>
+        <span class="text-[11px] font-bold">質檢首頁</span>
+      </button>
+      <button onclick="openGuideModal()" class="flex flex-col items-center gap-1 text-neutral-400 hover:text-neutral-800 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+        </svg>
+        <span class="text-[11px] font-medium">拍攝教學</span>
+      </button>
+      <button id="nav-about" onclick="switchMainTab('about')" class="flex flex-col items-center gap-1 text-neutral-400 hover:text-neutral-800 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span class="text-[11px] font-medium">專案理念</span>
+      </button>
+    </nav>
+
+    <!-- 3 頁滑動式教學彈窗 -->
+    <div id="guide-modal" class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-5">
+      <div class="bg-white w-full max-w-sm rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+        <div class="flex justify-between items-center">
+          <span id="slide-tag" class="text-xs font-bold px-2.5 py-1 rounded ikea-yellow text-neutral-900">步驟 1 / 3</span>
+          <button onclick="toggleModal('guide-modal', false)" class="text-neutral-400 hover:text-black text-sm font-bold">跳過 ✕</button>
+        </div>
+
+        <div id="slide-1" class="py-4 text-center space-y-3">
+          <div class="w-full h-36 ikea-gray rounded-xl flex items-center justify-center p-4">
+            <svg viewBox="0 0 200 120" class="w-44 h-28 stroke-[#0058A3] fill-none" stroke-width="2.5">
+              <rect x="55" y="12" width="90" height="96" rx="10" class="stroke-neutral-800" fill="#FFFFFF"/>
+              <path d="M 70 40 L 70 30 L 80 30 M 130 30 L 120 30 M 130 30 L 130 40 M 70 80 L 70 90 L 80 90 M 130 80 L 130 90 L 120 90" stroke="#0058A3" stroke-width="2.5" stroke-linecap="round"/>
+              <rect x="78" y="46" width="44" height="28" rx="3" stroke-dasharray="4,3"/>
+              <circle cx="158" cy="28" r="10" fill="#FFDB00" class="stroke-amber-500"/>
+            </svg>
+          </div>
+          <h3 class="text-base font-bold text-neutral-900">把品質控制移到拍照當下</h3>
+          <p class="text-xs text-neutral-600 leading-relaxed">
+            系統會即時偵測環境光線並提供對齊輔助框，解決過往民眾自拍照片角度、距離與光線不一的問題。
+          </p>
+        </div>
+
+        <div id="slide-2" class="hidden py-4 text-center space-y-3">
+          <div class="w-full h-36 ikea-gray rounded-xl flex items-center justify-center p-4">
+            <svg viewBox="0 0 200 120" class="w-44 h-28 fill-none">
+              <rect x="55" y="25" width="90" height="70" rx="6" class="stroke-neutral-700" stroke-width="2" fill="#FFFFFF"/>
+              <text x="100" y="64" text-anchor="middle" class="fill-[#0058A3] text-[11px] font-bold">1. 桌面整體</text>
+              <circle cx="55" cy="25" r="9" fill="#0058A3"/><text x="55" y="29" text-anchor="middle" class="fill-white text-[10px] font-bold">2</text>
+              <circle cx="145" cy="25" r="9" fill="#0058A3"/><text x="145" y="29" text-anchor="middle" class="fill-white text-[10px] font-bold">3</text>
+              <circle cx="145" cy="95" r="9" fill="#0058A3"/><text x="145" y="99" text-anchor="middle" class="fill-white text-[10px] font-bold">4</text>
+              <circle cx="55" cy="95" r="9" fill="#0058A3"/><text x="55" y="99" text-anchor="middle" class="fill-white text-[10px] font-bold">5</text>
+            </svg>
+          </div>
+          <h3 class="text-base font-bold text-neutral-900">1 張桌面整體 ＋ 4 張桌角特寫</h3>
+          <p class="text-xs text-neutral-600 leading-relaxed">
+            依序拍攝桌面俯視圖與四個桌角（左前、左後、右後、右前），全面檢查結構接縫、表面刮痕與受潮起泡。
+          </p>
+        </div>
+
+        <div id="slide-3" class="hidden py-4 text-center space-y-3">
+          <div class="w-full h-36 ikea-gray rounded-xl flex items-center justify-center p-4">
+            <svg viewBox="0 0 220 120" class="w-48 h-28 fill-none">
+              <rect x="12" y="28" width="58" height="64" rx="6" fill="#FFFFFF" class="stroke-[#0058A3]" stroke-width="2"/>
+              <text x="41" y="52" text-anchor="middle" class="fill-[#0058A3] text-[10px] font-bold">PASS</text>
+              <text x="41" y="72" text-anchor="middle" class="fill-neutral-700 text-[9px]">核發折價券</text>
+              <rect x="81" y="28" width="58" height="64" rx="6" fill="#FFFFFF" class="stroke-amber-500" stroke-width="2"/>
+              <text x="110" y="52" text-anchor="middle" class="fill-amber-600 text-[10px] font-bold">REVIEW</text>
+              <text x="110" y="72" text-anchor="middle" class="fill-neutral-700 text-[9px]">補拍轉人工</text>
+              <rect x="150" y="28" width="58" height="64" rx="6" fill="#FFFFFF" class="stroke-red-500" stroke-width="2"/>
+              <text x="179" y="52" text-anchor="middle" class="fill-red-600 text-[10px] font-bold">REJECT</text>
+              <text x="179" y="72" text-anchor="middle" class="fill-neutral-700 text-[9px]">維修或清運</text>
+            </svg>
+          </div>
+          <h3 class="text-base font-bold text-neutral-900">AI 三級分流與低碳循環獎勵</h3>
+          <p class="text-xs text-neutral-600 leading-relaxed">
+            良品直接試算收購價並提供門市自送加碼；疑慮案例精準引導補拍；報廢品分流至零件維修或環保清運，避免白跑一趟。
+          </p>
+        </div>
+
+        <div class="space-y-4 pt-2">
+          <div class="flex justify-center gap-2">
+            <span id="dot-0" class="w-5 h-1.5 rounded-full ikea-blue transition-all"></span>
+            <span id="dot-1" class="w-1.5 h-1.5 rounded-full bg-neutral-300 transition-all"></span>
+            <span id="dot-2" class="w-1.5 h-1.5 rounded-full bg-neutral-300 transition-all"></span>
+          </div>
+
+          <div class="flex gap-2">
+            <button id="btn-prev-slide" onclick="changeSlide(-1)" class="hidden flex-1 py-2.5 rounded-full border border-neutral-300 text-xs font-bold text-neutral-700">
+              上一頁
+            </button>
+            <button id="btn-next-slide" onclick="changeSlide(1)" class="flex-1 py-2.5 rounded-full ikea-blue text-white text-xs font-bold">
+              下一頁
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 加入主畫面說明彈窗 -->
+    <div id="ios-modal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center p-4">
+      <div class="bg-white w-full max-w-sm rounded-2xl p-5 shadow-xl space-y-3">
+        <div class="flex justify-between items-center">
+          <h3 class="text-sm font-bold text-neutral-900">將檢測工具加入手機主畫面</h3>
+          <button onclick="toggleModal('ios-modal', false)" class="text-neutral-400 hover:text-black font-bold">✕</button>
+        </div>
+        <p class="text-xs text-neutral-600 leading-relaxed">將網頁加入主畫面後，即可像一般 App 一樣全螢幕開啟相機進行檢測：</p>
+        <div class="ikea-gray p-3.5 rounded-xl space-y-2 text-xs text-neutral-800">
+          <div>1. 點擊 Safari 底部導覽列的 <b>「分享」圖示</b></div>
+          <div>2. 向下滑動選單，點擊 <b>「加入主畫面」</b></div>
+          <div>3. 點擊右上角 <b>「新增」</b> 即可完成</div>
+        </div>
+        <button onclick="toggleModal('ios-modal', false)" class="w-full py-2.5 rounded-full bg-neutral-900 text-white font-bold text-xs">
+          關閉
+        </button>
+      </div>
+    </div>
+
+    <!-- 全域載入畫面 -->
+    <div id="global-loading" class="hidden fixed inset-0 z-50 bg-black/75 flex flex-col items-center justify-center p-6 text-center text-white">
+      <div class="w-9 h-9 border-4 border-[#FFDB00] border-t-transparent rounded-full animate-spin mb-3"></div>
+      <div class="text-sm font-bold">正在分析 5 張家具照片...</div>
+      <div class="text-xs text-neutral-300 mt-1">正在檢查結構、表面磨損與受潮狀況（通常 5～10 秒，AI 忙碌時會自動重試）</div>
+    </div>
+
+  </div>
+
+  <script>
+    const BACKEND_BASE = (window.location.port === "5500" || window.location.protocol === "file:")
+      ? "http://localhost:8000"
+      : window.location.origin;
+
+    const steps = [
+      { badge: "照片 1 / 5：桌面整體", prompt: "請由上方或斜上方拍攝完整桌面", mode: "desktop" },
+      { badge: "照片 2 / 5：左前桌角", prompt: "黃點對準左前桌角，Y 字對齊桌邊和桌腳", mode: "corner" },
+      { badge: "照片 3 / 5：左後桌角", prompt: "黃點對準左後桌角，Y 字對齊桌邊和桌腳", mode: "corner" },
+      { badge: "照片 4 / 5：右後桌角", prompt: "黃點對準右後桌角，Y 字對齊桌邊和桌腳", mode: "corner" },
+      { badge: "照片 5 / 5：右前桌角", prompt: "黃點對準右前桌角，Y 字對齊桌邊和桌腳", mode: "corner" }
+    ];
+
+    const defectTypeMap = {
+      scratch: "刮痕",
+      dent: "凹痕",
+      chip: "缺角",
+      paint_loss: "掉漆",
+      stain: "污漬",
+      water_mark: "水漬",
+      swelling: "膨脹",
+      peeling: "脫皮",
+      crack: "裂縫",
+      loose_joint: "接合鬆脫",
+      missing_part: "缺件",
+      mold: "發霉",
+      other: "其他"
+    };
+
+    const scoreLabelMap = ["0 級（完好）", "1 級（輕微）", "2 級（中等）", "3 級（嚴重）", "4 級（報廢）"];
+    function scoreLabel(score) {
+      return (score === null || score === undefined) ? "無法判斷" : scoreLabelMap[score];
+    }
+    // 分數顏色：無法判斷灰色、0～1 藍色、2 橘色、3～4 紅色
+    function scoreColor(score) {
+      if (score === null || score === undefined) return "text-neutral-400";
+      if (score <= 1) return "text-[#0058A3]";
+      if (score === 2) return "text-amber-600";
+      return "text-red-600";
+    }
+    const photoLabels = ["1.桌面", "2.左前角", "3.左後角", "4.右後角", "5.右前角"];
+    let lastRetakeViews = [];
+
+    let currentSlide = 0;
+    let currentStep = 0;
+    const capturedImages = [null, null, null, null, null];
+
+    // ===== 拍照當下的單張檢查 =====
+    // 沒通過檢查的照片先放這裡（{ dataUrl, hint }），使用者選「仍然使用」才放回 capturedImages
+    const rejectedPhotos = [null, null, null, null, null];
+    let checkingPhoto = false;   // 檢查中先不能拍下一張
+    const CHECK_TIMEOUT_MS = 12000;
+
+    // 呼叫 /check-photo；出錯或逾時一律放行，送出後的完整分析還會再檢查一次
+    async function checkPhoto(view, dataUrl) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), CHECK_TIMEOUT_MS);
+      try {
+        const res = await fetch(`${BACKEND_BASE}/check-photo`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ view, image: dataUrl }),
+          signal: controller.signal
+        });
+        if (!res.ok) return { ok: true, skipped: true };
+        return await res.json();
+      } catch (e) {
+        return { ok: true, skipped: true };
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    // 檢查結果提示：checking / pass / fail / hidden
+    let bannerTimer = null;
+    function showCheckBanner(state, text = '') {
+      const banner = document.getElementById('check-banner');
+      clearTimeout(bannerTimer);
+      if (state === 'hidden') { banner.classList.add('hidden'); return; }
+      const styles = {
+        checking: 'bg-neutral-100 text-neutral-700',
+        pass: 'bg-green-50 text-green-800 border border-green-200',
+        fail: 'bg-amber-50 text-amber-900 border border-amber-300'
+      };
+      banner.className = `rounded-xl p-3 text-xs ${styles[state]}`;
+      document.getElementById('check-banner-text').innerText = text;
+      document.getElementById('check-spinner').classList.toggle('hidden', state !== 'checking');
+      document.getElementById('check-banner-actions').classList.toggle('hidden', state !== 'fail');
+      if (state === 'pass') bannerTimer = setTimeout(() => banner.classList.add('hidden'), 2000);
+    }
+
+    function showRejectedBanner(idx) {
+      showCheckBanner('fail', `第 ${idx + 1} 張需要重拍：${rejectedPhotos[idx].hint}`);
+    }
+
+    // 換到下一張還沒拍（或沒通過）的照片；5 張都好了就送出分析
+    function goToNextStep() {
+      const nextEmpty = capturedImages.findIndex(img => img === null);
+      if (nextEmpty !== -1) selectStep(nextEmpty);
+      else goToResult();
+    }
+
+    // 不通過時按「重拍這張」：丟掉這張，停在這一步
+    function retakeRejected() {
+      rejectedPhotos[currentStep] = null;
+      renderSlotThumb(currentStep, null);
+      showCheckBanner('hidden');
+      updateStepUI();
+    }
+
+    // 不通過時按「仍然使用」：AI 也可能判斷錯，讓使用者自己決定
+    function useRejectedAnyway() {
+      const rejected = rejectedPhotos[currentStep];
+      if (!rejected) return;
+      capturedImages[currentStep] = rejected.dataUrl;
+      rejectedPhotos[currentStep] = null;
+      renderSlotThumb(currentStep, rejected.dataUrl);
+      showCheckBanner('hidden');
+      updateStepUI();
+      goToNextStep();
+    }
+
+    // 相機串流和光線偵測計時器只保留一份，避免重拍時越開越多
+    let cameraStream = null;
+    let lightTimer = null;
+
+    // AI 回傳的文字放進 innerHTML 前先跳脫，避免被注入 HTML
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // 分析最久等 75 秒（後端 30 秒 × 2 次 + 重試等待），超過就放棄，避免畫面一直轉圈
+    const ANALYZE_TIMEOUT_MS = 75000;
+    async function fetchWithTimeout(url, options = {}) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), ANALYZE_TIMEOUT_MS);
+      try {
+        return await fetch(url, { ...options, signal: controller.signal });
+      } catch (e) {
+        if (e.name === 'AbortError') throw new Error('分析逾時（超過 75 秒），可能是網路不穩或 AI 服務忙碌');
+        throw new Error('連不到伺服器，請確認網路連線');
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    // 後端錯誤的 detail 可能是字串（我們自己丟的）或陣列（FastAPI 的 422 格式檢查）
+    async function readErrorMessage(res) {
+      const err = await res.json().catch(() => ({}));
+      if (typeof err.detail === 'string') return err.detail;
+      if (Array.isArray(err.detail)) return err.detail.map(d => d.msg).join('；');
+      return `HTTP 狀態碼 ${res.status}`;
+    }
+
+    // 首頁顯示伺服器狀態：Render 免費方案閒置會休眠，第一次叫醒可能要等快一分鐘
+    async function checkServer() {
+      const el = document.getElementById('server-status');
+      const started = Date.now();
+      const slowTimer = setTimeout(() => {
+        el.innerText = '伺服器啟動中，第一次可能要等約一分鐘…';
+      }, 3000);
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 90000);
+        const res = await fetch(`${BACKEND_BASE}/health`, { signal: controller.signal });
+        clearTimeout(timer);
+        if (!res.ok) throw new Error();
+        el.innerText = `✓ 伺服器已就緒（${((Date.now() - started) / 1000).toFixed(1)} 秒）`;
+        el.className = 'text-center text-[11px] text-green-700 pt-1';
+      } catch (e) {
+        el.innerText = '⚠ 連不到伺服器，點這裡重試';
+        el.className = 'text-center text-[11px] text-red-600 pt-1 underline cursor-pointer';
+        el.onclick = () => { el.onclick = null; el.className = 'text-center text-[11px] text-neutral-400 pt-1'; el.innerText = '正在連線伺服器…'; checkServer(); };
+      } finally {
+        clearTimeout(slowTimer);
+      }
+    }
+    checkServer();
+
+    function stopCamera() {
+      if (lightTimer) { clearInterval(lightTimer); lightTimer = null; }
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+      }
+      document.getElementById('video').srcObject = null;
+    }
+
+    function showScreen(name) {
+      ['home', 'about', 'camera', 'result'].forEach(s => {
+        document.getElementById(`screen-${s}`).classList.toggle('hidden', s !== name);
+      });
+      const fullScreen = name === 'camera';
+      document.getElementById('app-header').classList.toggle('hidden', fullScreen);
+      document.getElementById('app-bottom-nav').classList.toggle('hidden', fullScreen);
+    }
+
+    // 下方導覽列：質檢首頁 / 專案理念
+    function switchMainTab(tab) {
+      showScreen(tab);
+      const active = "flex flex-col items-center gap-1 text-[#0058A3]";
+      const inactive = "flex flex-col items-center gap-1 text-neutral-400 hover:text-neutral-800 transition";
+      document.getElementById('nav-home').className = tab === 'home' ? active : inactive;
+      document.getElementById('nav-about').className = tab === 'about' ? active : inactive;
+    }
+
+    // 相機畫面的「← 返回」：關相機回首頁，已拍的照片保留
+    function exitCameraToHome() {
+      stopCamera();
+      switchMainTab('home');
+    }
+
+    // 結果頁的「完成並返回首頁」：清空照片，下次重新開始
+    function finishAndGoHome() {
+      capturedImages.fill(null);
+      rejectedPhotos.fill(null);
+      lastRetakeViews = [];
+      for (let i = 0; i < 5; i++) renderSlotThumb(i, null);
+      showCheckBanner('hidden');
+      selectStep(0);
+      switchMainTab('home');
+    }
+
+    function toggleModal(id, show) {
+      document.getElementById(id).classList.toggle('hidden', !show);
+    }
+
+    function openGuideModal() {
+      currentSlide = 0;
+      updateSlideUI();
+      toggleModal('guide-modal', true);
+    }
+
+    function changeSlide(delta) {
+      if (currentSlide + delta >= 3) {
+        toggleModal('guide-modal', false);
+        return;
+      }
+      currentSlide = Math.max(0, currentSlide + delta);
+      updateSlideUI();
+    }
+
+    function updateSlideUI() {
+      document.getElementById('slide-tag').innerText = `步驟 ${currentSlide + 1} / 3`;
+      [0, 1, 2].forEach(i => {
+        document.getElementById(`slide-${i + 1}`).classList.toggle('hidden', i !== currentSlide);
+        const dot = document.getElementById(`dot-${i}`);
+        dot.className = i === currentSlide
+          ? "w-5 h-1.5 rounded-full ikea-blue transition-all"
+          : "w-1.5 h-1.5 rounded-full bg-neutral-300 transition-all";
+      });
+      document.getElementById('btn-prev-slide').classList.toggle('hidden', currentSlide === 0);
+      document.getElementById('btn-next-slide').innerText = currentSlide === 2 ? "開始使用" : "下一頁";
+    }
+
+    async function testBackendFolderImages() {
+      const loading = document.getElementById('global-loading');
+      loading.classList.remove('hidden');
+      try {
+        const res = await fetchWithTimeout(`${BACKEND_BASE}/analyze-test-images`);
+        if (!res.ok) throw new Error(await readErrorMessage(res));
+        const realData = await res.json();
+        if (realData.preview_images) {
+          realData.preview_images.forEach((img, idx) => { capturedImages[idx] = img; });
+          delete realData.preview_images;
+        }
+        loading.classList.add('hidden');
+        showScreen('result');
+        renderResultThumbnails();
+        renderInspectResult(realData);
+      } catch (e) {
+        loading.classList.add('hidden');
+        alert(`測試失敗：${e.message}\n請檢查 Render 環境變數 GEMINI_API_KEY、GEMINI_MODEL 與 test/images 照片是否已上傳！`);
+      }
+    }
+
+    async function startFlow() {
+      showScreen('camera');
+      if (cameraStream) return;  // 相機已經開著就不重複開
+      try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 960 } },
+          audio: false
+        });
+        // 相機開好之前使用者已經離開拍攝畫面（例如照片都通過、直接去分析了）：馬上關掉
+        if (document.getElementById('screen-camera').classList.contains('hidden')) {
+          stopCamera();
+          return;
+        }
+        document.getElementById('video').srcObject = cameraStream;
+        startLightMonitor();
+      } catch (err) {
+        document.getElementById('light-indicator').innerText = "相簿上傳模式";
+      }
+    }
+
+    function startLightMonitor() {
+      const video = document.getElementById('video');
+      const canvas = document.getElementById('calc-canvas');
+      const ctx = canvas.getContext('2d');
+      const indicator = document.getElementById('light-indicator');
+
+      if (lightTimer) clearInterval(lightTimer);
+      lightTimer = setInterval(() => {
+        if (!video.videoWidth) return;
+        canvas.width = 50; canvas.height = 50;
+        ctx.drawImage(video, 0, 0, 50, 50);
+        const data = ctx.getImageData(0, 0, 50, 50).data;
+        let sum = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          sum += (0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2]);
+        }
+        const avg = sum / 2500;
+        if (avg < 55) indicator.innerText = "光線偏暗";
+        else if (avg > 225) indicator.innerText = "反光過強";
+        else indicator.innerText = "光線正常";
+      }, 700);
+    }
+
+    function selectStep(index) {
+      currentStep = index;
+      updateStepUI();
+    }
+
+    function updateStepUI() {
+      const info = steps[currentStep];
+      document.getElementById('step-badge').innerText = info.badge;
+      document.getElementById('prompt-text').innerText = info.prompt;
+
+      const svgDesktop = document.getElementById('svg-desktop');
+      const svgCorner = document.getElementById('svg-corner');
+      if (info.mode === 'desktop') {
+        svgDesktop.classList.remove('hidden');
+        svgCorner.classList.add('hidden');
+      } else {
+        svgDesktop.classList.add('hidden');
+        svgCorner.classList.remove('hidden');
+      }
+
+      const slots = document.getElementById('thumbs-grid').children;
+      for (let i = 0; i < 5; i++) {
+        slots[i].classList.toggle('border-2', i === currentStep);
+        slots[i].classList.toggle('border-[#0058A3]', i === currentStep);
+        // 沒通過檢查的照片加紅框
+        slots[i].classList.toggle('ring-2', !!rejectedPhotos[i]);
+        slots[i].classList.toggle('ring-red-500', !!rejectedPhotos[i]);
+      }
+      // 切到沒通過的那張時，顯示它的重拍建議
+      if (!checkingPhoto) {
+        if (rejectedPhotos[currentStep]) showRejectedBanner(currentStep);
+        else if (!document.getElementById('check-banner').className.includes('green')) showCheckBanner('hidden');
+      }
+    }
+
+    function compressImageFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const maxDim = 800;
+            let w = img.width, h = img.height;
+            if (w > maxDim || h > maxDim) {
+              if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+              else { w = Math.round((w * maxDim) / h); h = maxDim; }
+            }
+            canvas.width = w;
+            canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL('image/jpeg', 0.7));
+          };
+          // 例如 HEIC 在非 Safari 瀏覽器打不開，沒有這行會一直卡住
+          img.onerror = () => reject(new Error(`無法讀取「${file.name}」，請改用 JPG 或 PNG 照片`));
+          img.src = e.target.result;
+        };
+        reader.onerror = () => reject(new Error(`無法讀取「${file.name}」`));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function triggerCapture() {
+      if (checkingPhoto) return;
+      const video = document.getElementById('video');
+      const canvas = document.getElementById('calc-canvas');
+      const ctx = canvas.getContext('2d');
+
+      if (!video.videoWidth) {
+        alert("目前未開啟相機鏡頭，請點左邊「從相簿選圖」選取照片！");
+        return;
+      }
+      const scale = Math.min(1, 800 / Math.max(video.videoWidth, video.videoHeight));
+      canvas.width = Math.round(video.videoWidth * scale);
+      canvas.height = Math.round(video.videoHeight * scale);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+      saveStepImage(dataUrl);
+    }
+
+    async function handleSingleUpload(event) {
+      const file = event.target.files[0];
+      event.target.value = '';
+      if (!file || checkingPhoto) return;
+      try {
+        await saveStepImage(await compressImageFile(file));
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    async function handleBatchUpload(event) {
+      const files = Array.from(event.target.files).slice(0, 5);
+      event.target.value = '';
+      if (!files.length) return;
+
+      showScreen('camera');
+      const loaded = [];
+      try {
+        for (let idx = 0; idx < files.length; idx++) {
+          const compressed = await compressImageFile(files[idx]);
+          renderSlotThumb(idx, compressed);
+          loaded.push([idx, compressed]);
+        }
+      } catch (e) {
+        alert(e.message);
+      }
+
+      // 每張都檢查一次（同時送出，大約跟檢查一張一樣快）
+      checkingPhoto = true;
+      showCheckBanner('checking', `AI 正在檢查 ${loaded.length} 張照片…`);
+      const results = await Promise.all(loaded.map(([idx, url]) => checkPhoto(idx + 1, url)));
+      checkingPhoto = false;
+      results.forEach((r, i) => {
+        const [idx, url] = loaded[i];
+        if (r.ok) {
+          capturedImages[idx] = url;
+          rejectedPhotos[idx] = null;
+        } else {
+          capturedImages[idx] = null;
+          rejectedPhotos[idx] = { dataUrl: url, hint: r.hint };
+        }
+      });
+
+      const firstRejected = rejectedPhotos.findIndex(r => r);
+      const nextEmpty = capturedImages.findIndex(img => img === null);
+      if (nextEmpty === -1) {
+        showCheckBanner('hidden');
+        goToResult();
+        return;
+      }
+      // 有照片沒通過或不足 5 張：留在拍攝畫面補拍（順便開相機）
+      startFlow();
+      selectStep(firstRejected !== -1 ? firstRejected : nextEmpty);
+      if (firstRejected === -1) showCheckBanner('pass', `✓ ${loaded.length} 張照片都沒問題，請補拍剩下的照片`);
+    }
+
+    function renderSlotThumb(idx, dataUrl) {
+      const slot = document.getElementById('thumbs-grid').children[idx];
+      slot.innerHTML = dataUrl
+        ? `<img src="${dataUrl}" class="w-full h-full object-cover"/>`
+        : photoLabels[idx];   // 沒有照片時顯示這格的名稱
+    }
+
+    // 拍好一張：先給 AI 檢查，通過才進下一張；不通過就顯示重拍建議
+    async function saveStepImage(dataUrl) {
+      const step = currentStep;
+      renderSlotThumb(step, dataUrl);
+      checkingPhoto = true;
+      showCheckBanner('checking', `AI 正在檢查第 ${step + 1} 張照片…`);
+      const result = await checkPhoto(step + 1, dataUrl);
+      checkingPhoto = false;
+
+      if (result.ok) {
+        capturedImages[step] = dataUrl;
+        rejectedPhotos[step] = null;
+        // 檢查服務沒回應時不顯示「沒問題」，直接放行
+        if (result.skipped) showCheckBanner('hidden');
+        else showCheckBanner('pass', `✓ 第 ${step + 1} 張沒問題`);
+        updateStepUI();
+        goToNextStep();
+      } else {
+        capturedImages[step] = null;
+        rejectedPhotos[step] = { dataUrl, hint: result.hint };
+        selectStep(step);
+      }
+    }
+
+    function renderResultThumbnails() {
+      const labels = ["1.桌面", "2.左前角", "3.左後角", "4.右後角", "5.右前角"];
+      document.getElementById('result-thumbs').innerHTML = capturedImages.map((img, i) => `
+        <div class="aspect-square rounded-lg bg-neutral-100 border border-neutral-200 overflow-hidden relative flex items-center justify-center">
+          ${img && img.startsWith('data:') ? `<img src="${img}" class="w-full h-full object-cover"/>` : `<span class="text-[11px] text-neutral-500">${labels[i]}</span>`}
+        </div>
+      `).join('');
+    }
+
+    async function goToResult() {
+      const loading = document.getElementById('global-loading');
+      loading.classList.remove('hidden');
+      renderResultThumbnails();
+
+      try {
+        const res = await fetchWithTimeout(`${BACKEND_BASE}/analyze`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ images: capturedImages })
+        });
+        if (!res.ok) throw new Error(await readErrorMessage(res));
+        const realData = await res.json();
+        loading.classList.add('hidden');
+        stopCamera();
+        showScreen('result');
+        renderInspectResult(realData);
+      } catch (e) {
+        loading.classList.add('hidden');
+        // 照片都還在，直接讓使用者選擇重送，不用重拍
+        if (confirm(`分析失敗：${e.message}\n\n要用同樣的 5 張照片重新送出嗎？\n（按「取消」可點縮圖重拍某一張）`)) {
+          goToResult();
+        }
+      }
+    }
+
+    // 只有示範資料會用到；真實結果一律用後端回傳的 final_decision
+    function decideByRules(data) {
+      const scores = [
+        data.dimensions.structure.score,
+        data.dimensions.surface_wear.score,
+        data.dimensions.water_damage.score
+      ];
+      const count = (n) => scores.filter(s => s === n).length;
+      // 跟 rules.py 同樣順序
+      if (data.need_retake) return "retake";
+      if (scores.includes(4) || count(3) >= 2) return "reject";
+      if (scores.includes(null)) return "retake";
+      if (count(3) === 1 || scores.includes(2) || data.confidence < 0.7) return "review";
+      return "pass";
+    }
+
+    // 示範按鈕：先拿後端存的真實結果（/demo/{type}），沒有的話才用下面寫死的範例
+    async function switchResult(type) {
+      try {
+        const res = await fetch(`${BACKEND_BASE}/demo/${type}`);
+        if (res.ok) {
+          const demoData = await res.json();
+          // 示範資料有存照片縮圖時，下面 5 張照片也換成示範用的照片
+          if (demoData.preview_images) {
+            demoData.preview_images.forEach((img, idx) => { capturedImages[idx] = img; });
+            delete demoData.preview_images;
+            renderResultThumbnails();
+          }
+          renderInspectResult(demoData);
+          return;
+        }
+      } catch (e) {
+        // 後端沒開時直接用寫死的範例
+      }
+      const mockResults = {
+        pass: {
+          confidence: 0.92,
+          dimensions: {
+            structure: { score: 0, note: "四個桌角與桌腳接合處穩固，無裂縫或鬆脫" },
+            surface_wear: { score: 1, note: "左前桌角有一處約 1 公分極細微刮痕，不影響整體觀感" },
+            water_damage: { score: 0, note: "桌面與邊緣平整，無受潮起泡或水漬" }
+          },
+          defects: [
+            { type: "scratch", location: "左前桌角表面細微刮痕（約 1cm）", view: 2 }
+          ],
+          reason: "結構與防潮狀況良好，僅左前桌角有極輕微使用刮痕，符合直接收購標準。",
+          price: { amount: 800, self_drop_amount: 850, text: "NT$ 800", formula: "非常好：新品 $2000 × 40%（一項有輕微痕跡）" },
+          need_retake: false,
+          retake_views: [],
+          retake_hint: ""
+        },
+        review: {
+          confidence: 0.85,
+          dimensions: {
+            structure: { score: 0, note: "結構完整" },
+            surface_wear: { score: 2, note: "左前桌角有明顯磨損與掉漆" },
+            water_damage: { score: 0, note: "沒有受潮跡象" }
+          },
+          defects: [
+            { type: "paint_loss", location: "左前桌角邊緣約 3 公分磨損露底（亦見於照片 1）", view: 2 }
+          ],
+          reason: "桌角磨損達中等程度（2 級），請針對標記部位補拍近照以利人工確認殘值。",
+          price: { amount: null, self_drop_amount: null, text: "轉交人工核價", formula: "最高不超過 NT$ 600，由專員確認" },
+          need_retake: false,
+          retake_views: [],
+          retake_hint: ""
+        },
+        reject: {
+          confidence: 0.95,
+          dimensions: {
+            structure: { score: 2, note: "右後桌角接合處有輕微開縫" },
+            surface_wear: { score: 2, note: "桌面及邊角有多處脫皮" },
+            water_damage: { score: 4, note: "左後與右後桌角板材大面積膨脹變形，無法修復" }
+          },
+          defects: [
+            { type: "swelling", location: "左後桌角板材受潮膨脹變形、邊緣鬆散（亦見於照片 1）", view: 3 },
+            { type: "peeling", location: "右後桌角貼皮大面積翹起脫落", view: 4 }
+          ],
+          reason: "桌角板材大面積受潮膨脹（4 級）與貼皮脫落，影響後續使用安全與壽命，不予收購。",
+          price: { amount: 0, self_drop_amount: null, text: "NT$ 0", formula: "受損程度不符收購標準" },
+          need_retake: false,
+          retake_views: [],
+          retake_hint: ""
+        },
+        retake: {
+          confidence: 0.5,
+          dimensions: {
+            structure: { score: null, note: "照片需要重拍，重拍後再評分" },
+            surface_wear: { score: null, note: "照片需要重拍，重拍後再評分" },
+            water_damage: { score: null, note: "照片需要重拍，重拍後再評分" }
+          },
+          defects: [],
+          reason: "左後桌角照片太暗，無法判斷結構，需要重拍後才能完成評估。",
+          price: { amount: null, self_drop_amount: null, text: "重拍後估價", formula: "部分照片無法判斷" },
+          need_retake: true,
+          retake_views: [3],
+          retake_hint: "第 3 張照片過暗，看不清楚桌腳，請在光線充足處重拍左後桌角"
+        }
+      };
+
+      renderInspectResult(mockResults[type]);
+      const note = document.getElementById('demo-note');
+      note.innerText = '示範資料（非即時分析）';
+      note.classList.remove('hidden');
+    }
+
+    function renderInspectResult(data) {
+      const finalDecision = data.final_decision || decideByRules(data);
+      // 價格一律由後端計算（pricing.py），前端只負責顯示
+      const priceInfo = data.price || { amount: null, self_drop_amount: null, text: "—", formula: "" };
+
+      const card = document.getElementById('result-card');
+      const badge = document.getElementById('result-badge');
+      const conf = document.getElementById('confidence-tag');
+      const title = document.getElementById('result-title');
+      const formula = document.getElementById('price-formula');
+      const desc = document.getElementById('result-desc');
+      const retakeBox = document.getElementById('retake-box');
+
+      conf.innerText = (data.confidence === null || data.confidence === undefined) ? '' : `把握度：${Math.round(data.confidence * 100)}%`;
+      title.innerText = priceInfo.text;
+      formula.innerText = priceInfo.formula;
+      desc.innerText = data.reason;
+
+      if (finalDecision === 'retake' && data.retake_hint) {
+        retakeBox.classList.remove('hidden');
+        retakeBox.innerText = `需補拍提示：${data.retake_hint}`;
+      } else {
+        retakeBox.classList.add('hidden');
+      }
+
+      document.getElementById('action-pass').classList.toggle('hidden', finalDecision !== 'pass');
+      document.getElementById('action-review').classList.toggle('hidden', finalDecision !== 'review');
+      document.getElementById('action-reject').classList.toggle('hidden', finalDecision !== 'reject');
+      document.getElementById('action-retake').classList.toggle('hidden', finalDecision !== 'retake');
+      // 示範資料標示出來，避免被當成即時分析結果
+      const demoNote = document.getElementById('demo-note');
+      demoNote.innerText = data.demo ? `示範資料：預先保存的真實分析結果（${(data.saved_at || '').replace('T', ' ')}）` : '';
+      demoNote.classList.toggle('hidden', !data.demo);
+
+      if (finalDecision === 'pass') {
+        card.className = "ikea-gray p-5 rounded-xl border-l-4 border-[#0058A3]";
+        badge.className = "text-xs font-bold px-2.5 py-0.5 rounded bg-[#0058A3] text-white";
+        badge.innerText = "符合收購標準";
+        document.getElementById('self-drop-price').innerText = priceInfo.self_drop_amount ?? '—';
+      } else if (finalDecision === 'review') {
+        card.className = "ikea-gray p-5 rounded-xl border-l-4 border-amber-500";
+        badge.className = "text-xs font-bold px-2.5 py-0.5 rounded bg-amber-400 text-black";
+        badge.innerText = "需人工複核";
+        renderReviewPrompts(data);
+      } else if (finalDecision === 'retake') {
+        card.className = "ikea-gray p-5 rounded-xl border-l-4 border-neutral-500";
+        badge.className = "text-xs font-bold px-2.5 py-0.5 rounded bg-neutral-700 text-white";
+        badge.innerText = "照片需要重拍";
+        // 示範資料的照片不是使用者拍的，所以示範時一律重拍全部
+        lastRetakeViews = data.demo ? [] : (data.retake_views || []).filter(v => v >= 1 && v <= 5);
+        const dimNames = { structure: "結構", surface_wear: "表面磨損", water_damage: "受潮" };
+        const unknown = Object.keys(dimNames).filter(k => data.dimensions[k].score === null).map(k => dimNames[k]);
+        const parts = [];
+        if (lastRetakeViews.length) parts.push(`需要重拍：${lastRetakeViews.map(v => photoLabels[v - 1]).join('、')}`);
+        // 有指定重拍哪幾張時，三項本來就都是 null，不用再列一次
+        if (!lastRetakeViews.length && unknown.length) parts.push(`無法判斷的項目：${unknown.join('、')}`);
+        document.getElementById('retake-views-text').innerText = parts.join('\n') || '請依上方提示重新拍攝';
+        // 後端可能因為 score 是 null 判 retake，但沒指定哪幾張，這時讓使用者重拍全部
+        document.getElementById('btn-retake').innerText = lastRetakeViews.length ? '重拍這幾張照片' : '重新拍攝全部照片';
+      } else {
+        card.className = "ikea-gray p-5 rounded-xl border-l-4 border-red-600";
+        badge.className = "text-xs font-bold px-2.5 py-0.5 rounded bg-red-600 text-white";
+        badge.innerText = "無法收購";
+      }
+
+      const d = data.dimensions;
+      [['structure', 'structure'], ['surface', 'surface_wear'], ['water', 'water_damage']].forEach(([id, key]) => {
+        const scoreEl = document.getElementById(`score-${id}`);
+        scoreEl.innerText = scoreLabel(d[key].score);
+        scoreEl.className = `font-bold ${scoreColor(d[key].score)}`;
+        document.getElementById(`note-${id}`).innerText = d[key].note;
+      });
+
+      const defectsList = document.getElementById('defects-list');
+      if (!data.defects || data.defects.length === 0) {
+        defectsList.innerHTML = `<div class="text-neutral-500">無明顯缺陷</div>`;
+      } else {
+        defectsList.innerHTML = data.defects.map(item => `
+          <div class="bg-white p-2.5 rounded-lg border border-neutral-200 flex justify-between items-start gap-2">
+            <div>
+              <span class="font-bold text-neutral-900">[${escapeHtml(defectTypeMap[item.type] || item.type)}]</span>
+              <span class="text-neutral-600 ml-1">${escapeHtml(item.location)}</span>
+            </div>
+            <span class="shrink-0 px-2 py-0.5 bg-neutral-100 rounded text-[11px] font-medium text-neutral-700">照片 ${escapeHtml(item.view)}</span>
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('json-viewer').innerText = JSON.stringify(data, null, 2);
+    }
+
+    function renderReviewPrompts(data) {
+      const box = document.getElementById('review-defect-prompts');
+      document.getElementById('extra-thumbs').innerHTML = '';
+      const btn = document.getElementById('btn-submit-review');
+      btn.innerText = "送出人工審核";
+      btn.disabled = false;
+
+      if (data.defects && data.defects.length > 0) {
+        box.innerHTML = data.defects.map(item => `
+          <div class="bg-white p-2.5 rounded-lg border border-amber-200 text-neutral-800">
+            請針對 <b>照片 ${escapeHtml(item.view)}（${escapeHtml(defectTypeMap[item.type] || item.type)}：${escapeHtml(item.location)}）</b> 距離 15 公分補拍清晰近照。
+          </div>
+        `).join('');
+      } else {
+        box.innerHTML = `<div class="bg-white p-2.5 rounded-lg border border-amber-200 text-neutral-800">請針對反光或模糊部位補拍清晰照片。</div>`;
+      }
+    }
+
+    function handleExtraUpload(event) {
+      const files = Array.from(event.target.files);
+      const container = document.getElementById('extra-thumbs');
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const div = document.createElement('div');
+          div.className = "w-14 h-14 rounded-lg border border-amber-400 overflow-hidden bg-neutral-100 flex items-center justify-center text-[10px]";
+          if (file.type.startsWith('video/')) {
+            div.innerHTML = `<span class="font-bold text-amber-800">2秒短片</span>`;
+          } else {
+            div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover"/>`;
+          }
+          container.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function startRetake() {
+      lastRetakeViews = lastRetakeViews.filter(v => v >= 1 && v <= 5);
+      if (!lastRetakeViews.length) lastRetakeViews = [1, 2, 3, 4, 5];
+      lastRetakeViews.forEach(v => {
+        capturedImages[v - 1] = null;
+        rejectedPhotos[v - 1] = null;
+        document.getElementById('thumbs-grid').children[v - 1].innerHTML = photoLabels[v - 1];
+      });
+      startFlow();
+      selectStep(lastRetakeViews[0] - 1);
+    }
+
+    function submitHumanReview() {
+      const btn = document.getElementById('btn-submit-review');
+      btn.innerText = "✓ 已送交客服專員";
+      btn.disabled = true;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+# API 金鑰不要上傳，部署時在 Render 後台設定環境變數
+.env
+
+__pycache__/
+*.pyc
+venv/
+.venv/
