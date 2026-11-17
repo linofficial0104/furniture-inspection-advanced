@@ -1,6 +1,6 @@
 """
 把 5 張照片和 prompt 送給 Gemini，拿回檢查表（InspectResult）。
-main.py 呼叫這裡的 analyze_photos()（5 張一起分析）和 check_single_photo()（拍照當下單張檢查）。
+main.py 呼叫這裡的 analyze_photos()。
 """
 import os
 import time
@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import errors, types
 
-from schema import InspectResult, SinglePhotoCheck
+from schema import InspectResult
 
 BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / ".env")
@@ -22,15 +22,9 @@ if not API_KEY or not MODEL:
     raise RuntimeError("找不到 GEMINI_API_KEY 或 GEMINI_MODEL，請檢查 .env")
 
 PROMPT = (BASE_DIR / "prompt.txt").read_text(encoding="utf-8")
-CHECK_PROMPT = (BASE_DIR / "check_prompt.txt").read_text(encoding="utf-8")
-
-# 拍照當下單張檢查用的模型：要快、要便宜；沒設定就跟分析用同一個
-CHECK_MODEL = os.getenv("GEMINI_CHECK_MODEL") or MODEL
-CHECK_TIMEOUT_MS = 10_000   # 單張檢查最多等 10 秒，超過就放行，不卡使用者
 
 # 照片順序跟前端一致：1 桌面整體，2～5 四個桌角（左前、左後、右後、右前）
 PHOTO_LABELS = ["桌面整體", "左前桌角", "左後桌角", "右後桌角", "右前桌角"]
-PHOTO_FILES = ["desktop.jpg", "corner_1.jpg", "corner_2.jpg", "corner_3.jpg", "corner_4.jpg"]
 
 MAX_ATTEMPTS = 2        # 最多試幾次（第一次 + 重試一次）
 RETRY_WAIT_SECONDS = 2  # 重試前等幾秒
@@ -40,39 +34,6 @@ client = genai.Client(
     api_key=API_KEY,
     http_options=types.HttpOptions(timeout=TIMEOUT_MS),
 )
-check_client = genai.Client(
-    api_key=API_KEY,
-    http_options=types.HttpOptions(timeout=CHECK_TIMEOUT_MS),
-)
-
-# 每張照片的拍攝要求，給單張檢查用
-PHOTO_REQUIREMENTS = [
-    "必須看得到整個桌面，桌面的四個邊和四個角大致都在畫面內。只拍到一個桌角、桌邊或局部特寫就不符合。",
-] + [
-    "必須是單一桌角的特寫，看得到桌角、桌腳和兩者的接合處。整個桌面俯視、沒有桌腳、或不是桌子就不符合。"
-] * 4
-
-
-def check_single_photo(view: int, data: bytes, mime_type: str) -> SinglePhotoCheck:
-    """
-    拍照當下檢查單張照片：拍的部位對不對、清不清楚。
-    view：照片編號 1～5。只呼叫一次、不重試，失敗就 raise，由呼叫端決定要不要放行。
-    """
-    prompt = CHECK_PROMPT.format(
-        view=view, label=PHOTO_LABELS[view - 1], requirement=PHOTO_REQUIREMENTS[view - 1]
-    )
-    response = check_client.models.generate_content(
-        model=CHECK_MODEL,
-        contents=[prompt, types.Part.from_bytes(data=data, mime_type=mime_type)],
-        config=types.GenerateContentConfig(
-            response_mime_type="application/json",
-            response_schema=SinglePhotoCheck,
-            automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
-        ),
-    )
-    if not response.text:
-        raise ValueError("Gemini 沒有回傳內容")
-    return SinglePhotoCheck.model_validate_json(response.text)
 
 
 def _build_contents(photos):

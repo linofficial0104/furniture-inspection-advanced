@@ -1,4 +1,4 @@
-from pydantic import BaseModel,Field,ValidationError,field_validator,model_validator
+from pydantic import BaseModel,Field,field_validator,model_validator
 
 # 每張照片應該拍到的內容，順序跟前端一致
 EXPECTED_VIEWS = ["桌面整體", "左前桌角", "左後桌角", "右後桌角", "右前桌角"]
@@ -8,13 +8,6 @@ class PhotoCheck(BaseModel):
     view:int = Field(le=5,ge=1)
     seen:str      # 這張照片實際拍到什麼
     matches:bool  # 是否符合這張應該拍的內容（照片 1 要完整桌面，照片 2～5 要桌角與桌腳）
-
-class SinglePhotoCheck(BaseModel):
-    """拍照當下的單張檢查（/check-photo）"""
-    seen:str      # 照片實際拍到什麼
-    matches:bool  # 是否符合這張該拍的內容
-    clear:bool    # 是否清楚可用
-    hint:str      # 不通過時的重拍建議
 
 class Dimension(BaseModel):
     score:int|None = Field(le=4,ge=0)
@@ -66,19 +59,4 @@ class InspectResult(BaseModel):
                 dim.score = None
                 dim.note = RETAKE_NOTE
         return self
-
-# ========== 測試function ==========
-
-def try_parse(blueprint,json_text):
-    try:
-        d = blueprint.model_validate_json(json_text)
-        # print("succeed",d.model_dump())#這邊出來是dict
-        print("succeed",d.model_dump_json(indent=2))#這邊出來直接是json
-    except ValidationError as e:
-        print(f"error:{e}")
-
-
-if __name__ == "__main__":
-  pass
- 
 
