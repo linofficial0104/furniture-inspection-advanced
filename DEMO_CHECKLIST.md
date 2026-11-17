@@ -6,12 +6,15 @@
 - [ ] Environment 設 `PYTHON_VERSION`（本機開發用 3.14，兩邊一致比較保險）
 - [ ] Build Command：`pip install -r requirements.txt`
 - [ ] Start Command：`uvicorn main:app --host 0.0.0.0 --port $PORT`
+- [ ] `demo/` 資料夾的 4 個 json 和 `test/images` 的 5 張照片有一起上傳（示範結果和範例照片要用）
 
 ## 手機實測（iPhone、Android 各一台）
 
 用 Render 的 https 網址開，不要用 http 或區網 IP：手機瀏覽器只有 https 才能開相機。
 
 - [ ] 瀏覽器分頁上的 icon 是藍色方塊、白色取景框、黃色桌子
+- [ ] 首頁「直接看示範結果」的 可收購／人工複核／不收購／需重拍 四個按鈕都有照片和結果，結果卡片上有灰字「示範資料」
+- [ ] 首頁「沒有桌子？用範例照片試試」能跑出真實分析結果（AI 忙碌時會跳出提示，請改看示範結果）
 - [ ] 按「開始拍照檢測」會跳出相機權限，允許後看得到畫面
 - [ ] 拍照畫面右上角的光線提示會變色：正常是綠色「☀ 光線充足」，遮住鏡頭變紅色閃爍「🌙 光線太暗」
 - [ ] 光線太暗時，下方按鈕變灰色「光線太暗，無法拍攝」，按了沒反應；移到亮處後恢復成「拍攝此角度」
@@ -44,8 +47,20 @@
 - [ ] 用手機打開網址，等首頁出現（Render 免費方案閒置會休眠，第一次打開可能要等約一分鐘）
 - [ ] 自己完整拍一次 5 張照片，確認 Gemini 正常、拿得到結果
 - [ ] 確認標題旁沒有紫色「開發者設定」標籤（正式模式）
+- [ ] 萬一 Gemini 掛掉：改用首頁「直接看示範結果」，資料是之前真實跑出來的
+
+## 重新產生示範資料
+
+```bash
+python make_demo.py pass   照片資料夾
+python make_demo.py review 照片資料夾
+python make_demo.py reject 照片資料夾
+python make_demo.py retake 照片1 照片2 照片3 照片4 照片5
+```
+
+資料夾裡要有 `desktop.jpg`、`corner_1.jpg`～`corner_4.jpg`。分析結果跟指定的不同時不會存檔。
 
 ## 已知問題
 
-- `test/images` 的照片裡，corner_1 和 corner_3 是同一張、corner_2 和 corner_4 是同一張。這些照片現在只拿來開發測試，網頁不會用到。
+- `test/images`（「用範例照片試試」用的照片）裡，corner_1 和 corner_3 是同一張、corner_2 和 corner_4 是同一張。實測大多判定為「可收購」，偶爾會判成「需要重拍」；換成四個不同桌角的真實照片會比較穩定。
 - 後端的 `/check-photo`（單張檢查）現在沒有用到，留著方便之後要再開回來。

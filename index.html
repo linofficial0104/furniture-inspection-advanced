@@ -120,6 +120,17 @@
             </div>
           </div>
         </div>
+
+        <!-- 給手邊沒有桌子的人（例如評審）：直接看預先跑好的四種結果 -->
+        <div>
+          <div class="text-xs font-bold text-neutral-700 mb-2">直接看示範結果</div>
+          <div class="grid grid-cols-4 gap-2 text-[11px]">
+            <button onclick="switchResult('pass')" class="py-2 rounded-xl bg-white border border-neutral-200 font-bold text-neutral-800 active:bg-neutral-100"><span class="block w-2 h-2 rounded-full bg-[#0058A3] mx-auto mb-1"></span>可收購</button>
+            <button onclick="switchResult('review')" class="py-2 rounded-xl bg-white border border-neutral-200 font-bold text-neutral-800 active:bg-neutral-100"><span class="block w-2 h-2 rounded-full bg-amber-400 mx-auto mb-1"></span>人工複核</button>
+            <button onclick="switchResult('reject')" class="py-2 rounded-xl bg-white border border-neutral-200 font-bold text-neutral-800 active:bg-neutral-100"><span class="block w-2 h-2 rounded-full bg-red-600 mx-auto mb-1"></span>不收購</button>
+            <button onclick="switchResult('retake')" class="py-2 rounded-xl bg-white border border-neutral-200 font-bold text-neutral-800 active:bg-neutral-100"><span class="block w-2 h-2 rounded-full bg-neutral-500 mx-auto mb-1"></span>需重拍</button>
+          </div>
+        </div>
       </div>
 
       <!-- 底部操作按鈕區 -->
@@ -127,11 +138,16 @@
         <button onclick="startFlow()" class="w-full py-3.5 rounded-full font-bold text-sm ikea-blue text-white active:opacity-90 transition">
           開始拍照檢測
         </button>
+        <!-- 用伺服器上的範例照片跑一次真實的 AI 分析 -->
+        <button id="btn-sample-test" onclick="testBackendFolderImages()" class="w-full py-3 rounded-full font-bold text-xs bg-white text-neutral-900 border border-neutral-300 active:bg-neutral-100 transition">
+          沒有桌子？用範例照片試試
+        </button>
         <!-- 只有開發者模式開啟相簿上傳時才會顯示 -->
         <button id="btn-album-home" onclick="document.getElementById('batch-upload').click()" class="hidden w-full py-3 rounded-full font-bold text-xs bg-white text-neutral-900 border border-neutral-300 active:bg-neutral-100 transition">
           從相簿選取 5 張照片
         </button>
         <input type="file" id="batch-upload" accept="image/*" multiple class="hidden" onchange="handleBatchUpload(event)">
+        <p class="text-center text-[11px] text-neutral-400 pt-1">本網站為競賽原型，非 IKEA 官方服務</p>
       </div>
     </main>
 
@@ -163,6 +179,10 @@
           林承翰、蕭宇臻、張瑋家、陳均碩、葉宇森、陳宥廷、陳宥羲
         </div>
       </div>
+
+      <p class="text-[11px] text-neutral-400 leading-relaxed">
+        本網站為競賽原型，非 IKEA 官方服務。網站中的 IKEA 名稱、門市與客服資訊僅作情境示意，收購價與折價券金額為原型試算，不代表實際收購條件。
+      </p>
     </section>
 
     <!-- 相機拍攝頁（全螢幕沉浸式） -->
@@ -258,6 +278,7 @@
           </div>
           <p id="result-desc" class="text-xs text-neutral-700 mt-3 leading-relaxed font-medium"></p>
           <p id="retake-box" class="hidden text-xs text-amber-800 bg-amber-100/80 border border-amber-300 rounded p-2 mt-2"></p>
+          <p id="demo-note" class="hidden text-[11px] text-neutral-400 mt-2"></p>
         </div>
 
         <!-- RETAKE 專屬：重拍指定照片 -->
@@ -301,6 +322,7 @@
               </a>
             </div>
             <div class="text-[11px] text-neutral-500 pt-1">客服專線：412-8869（手機撥打請加 02）｜服務時間 9:00 - 18:00</div>
+            <div class="text-[11px] text-neutral-400">門市與客服資訊僅作情境示意，本網站為競賽原型，非 IKEA 官方服務</div>
           </div>
         </div>
 
@@ -322,6 +344,7 @@
               送出人工審核
             </button>
           </div>
+          <p class="text-[11px] text-neutral-500">原型示意，尚未串接後台：按下送出不會真的傳送資料。</p>
         </div>
 
         <!-- REJECT 專屬：維修與清運分流 -->
@@ -390,6 +413,18 @@
           <summary class="font-bold text-neutral-600 cursor-pointer">檢視 JSON</summary>
           <pre id="json-viewer" class="mt-2 p-3 rounded-lg bg-white border border-neutral-200 text-neutral-800 font-mono text-[11px] overflow-x-auto"></pre>
         </details>
+
+        <details class="ikea-gray rounded-xl p-3 text-xs">
+          <summary class="font-bold text-neutral-600 cursor-pointer">看其他示範結果</summary>
+          <div class="mt-2 grid grid-cols-4 gap-2 text-[11px]">
+            <button onclick="switchResult('pass')" class="py-2 rounded-xl bg-white border border-neutral-200 font-bold text-neutral-800 active:bg-neutral-100"><span class="block w-2 h-2 rounded-full bg-[#0058A3] mx-auto mb-1"></span>可收購</button>
+            <button onclick="switchResult('review')" class="py-2 rounded-xl bg-white border border-neutral-200 font-bold text-neutral-800 active:bg-neutral-100"><span class="block w-2 h-2 rounded-full bg-amber-400 mx-auto mb-1"></span>人工複核</button>
+            <button onclick="switchResult('reject')" class="py-2 rounded-xl bg-white border border-neutral-200 font-bold text-neutral-800 active:bg-neutral-100"><span class="block w-2 h-2 rounded-full bg-red-600 mx-auto mb-1"></span>不收購</button>
+            <button onclick="switchResult('retake')" class="py-2 rounded-xl bg-white border border-neutral-200 font-bold text-neutral-800 active:bg-neutral-100"><span class="block w-2 h-2 rounded-full bg-neutral-500 mx-auto mb-1"></span>需重拍</button>
+          </div>
+        </details>
+
+        <p class="text-center text-[11px] text-neutral-400">本網站為競賽原型，非 IKEA 官方服務；收購價為原型試算，不代表實際收購條件</p>
       </div>
 
       <button onclick="finishAndGoHome()" class="w-full py-3.5 mt-5 rounded-full bg-neutral-900 text-white font-bold text-sm">
@@ -892,6 +927,28 @@
       document.getElementById('btn-next-slide').innerText = currentSlide === 2 ? "開始使用" : "下一頁";
     }
 
+    async function testBackendFolderImages() {
+      const loading = document.getElementById('global-loading');
+      document.getElementById('loading-thumbs').innerHTML = '';
+      loading.classList.remove('hidden');
+      try {
+        const res = await fetchWithTimeout(`${BACKEND_BASE}/analyze-test-images`);
+        if (!res.ok) throw new Error(await readErrorMessage(res));
+        const realData = await res.json();
+        if (realData.preview_images) {
+          realData.preview_images.forEach((img, idx) => { capturedImages[idx] = img; });
+          delete realData.preview_images;
+        }
+        loading.classList.add('hidden');
+        showScreen('result');
+        renderResultThumbnails();
+        renderInspectResult(realData);
+      } catch (e) {
+        loading.classList.add('hidden');
+        alert(`範例照片分析失敗：${e.message}\n可以改點下方的示範結果查看。`);
+      }
+    }
+
     async function startFlow() {
       showScreen('camera');
       if (cameraStream) return;  // 相機已經開著就不重複開
@@ -1107,8 +1164,122 @@
       }
     }
 
+    // 只有示範資料會用到；真實結果一律用後端回傳的 final_decision
+    function decideByRules(data) {
+      const scores = [
+        data.dimensions.structure.score,
+        data.dimensions.surface_wear.score,
+        data.dimensions.water_damage.score
+      ];
+      const count = (n) => scores.filter(s => s === n).length;
+      // 跟 rules.py 同樣順序
+      if (data.need_retake) return "retake";
+      if (scores.includes(4) || count(3) >= 2) return "reject";
+      if (scores.includes(null)) return "retake";
+      if (count(3) === 1 || scores.includes(2) || data.confidence < 0.7) return "review";
+      return "pass";
+    }
+
+    // 從首頁點示範結果時，切到結果頁並捲回最上面
+    function showResultScreen() {
+      showScreen('result');
+      document.getElementById('screen-result').scrollTop = 0;
+    }
+
+    // 示範按鈕：先拿後端存的真實結果（/demo/{type}），沒有的話才用下面寫死的範例
+    async function switchResult(type) {
+      try {
+        const res = await fetch(`${BACKEND_BASE}/demo/${type}`);
+        if (res.ok) {
+          const demoData = await res.json();
+          // 示範資料有存照片縮圖時，下面 5 張照片也換成示範用的照片
+          if (demoData.preview_images) {
+            demoData.preview_images.forEach((img, idx) => { capturedImages[idx] = img; });
+            delete demoData.preview_images;
+            renderResultThumbnails();
+          }
+          renderInspectResult(demoData);
+          showResultScreen();
+          return;
+        }
+      } catch (e) {
+        // 後端沒開時直接用寫死的範例
+      }
+      const mockResults = {
+        pass: {
+          confidence: 0.92,
+          dimensions: {
+            structure: { score: 0, note: "四個桌角與桌腳接合處穩固，無裂縫或鬆脫" },
+            surface_wear: { score: 1, note: "左前桌角有一處約 1 公分極細微刮痕，不影響整體觀感" },
+            water_damage: { score: 0, note: "桌面與邊緣平整，無受潮起泡或水漬" }
+          },
+          defects: [
+            { type: "scratch", location: "左前桌角表面細微刮痕（約 1cm）", view: 2 }
+          ],
+          reason: "結構與防潮狀況良好，僅左前桌角有極輕微使用刮痕，符合直接收購標準。",
+          price: { amount: 800, self_drop_amount: 850, text: "NT$ 800", formula: "非常好：新品 $2000 × 40%（一項有輕微痕跡）" },
+          need_retake: false,
+          retake_views: [],
+          retake_hint: ""
+        },
+        review: {
+          confidence: 0.85,
+          dimensions: {
+            structure: { score: 0, note: "結構完整" },
+            surface_wear: { score: 2, note: "左前桌角有明顯磨損與掉漆" },
+            water_damage: { score: 0, note: "沒有受潮跡象" }
+          },
+          defects: [
+            { type: "paint_loss", location: "左前桌角邊緣約 3 公分磨損露底（亦見於照片 1）", view: 2 }
+          ],
+          reason: "桌角磨損達中等程度（2 級），請針對標記部位補拍近照以利人工確認殘值。",
+          price: { amount: null, self_drop_amount: null, text: "轉交人工核價", formula: "最高不超過 NT$ 600，由專員確認" },
+          need_retake: false,
+          retake_views: [],
+          retake_hint: ""
+        },
+        reject: {
+          confidence: 0.95,
+          dimensions: {
+            structure: { score: 2, note: "右後桌角接合處有輕微開縫" },
+            surface_wear: { score: 2, note: "桌面及邊角有多處脫皮" },
+            water_damage: { score: 4, note: "左後與右後桌角板材大面積膨脹變形，無法修復" }
+          },
+          defects: [
+            { type: "swelling", location: "左後桌角板材受潮膨脹變形、邊緣鬆散（亦見於照片 1）", view: 3 },
+            { type: "peeling", location: "右後桌角貼皮大面積翹起脫落", view: 4 }
+          ],
+          reason: "桌角板材大面積受潮膨脹（4 級）與貼皮脫落，影響後續使用安全與壽命，不予收購。",
+          price: { amount: 0, self_drop_amount: null, text: "NT$ 0", formula: "受損程度不符收購標準" },
+          need_retake: false,
+          retake_views: [],
+          retake_hint: ""
+        },
+        retake: {
+          confidence: 0.5,
+          dimensions: {
+            structure: { score: null, note: "照片需要重拍，重拍後再評分" },
+            surface_wear: { score: null, note: "照片需要重拍，重拍後再評分" },
+            water_damage: { score: null, note: "照片需要重拍，重拍後再評分" }
+          },
+          defects: [],
+          reason: "左後桌角照片太暗，無法判斷結構，需要重拍後才能完成評估。",
+          price: { amount: null, self_drop_amount: null, text: "重拍後估價", formula: "部分照片無法判斷" },
+          need_retake: true,
+          retake_views: [3],
+          retake_hint: "第 3 張照片過暗，看不清楚桌腳，請在光線充足處重拍左後桌角"
+        }
+      };
+
+      renderInspectResult(mockResults[type]);
+      showResultScreen();
+      const note = document.getElementById('demo-note');
+      note.innerText = '示範資料（非即時分析）';
+      note.classList.remove('hidden');
+    }
+
     function renderInspectResult(data) {
-      const finalDecision = data.final_decision;
+      const finalDecision = data.final_decision || decideByRules(data);
       // 價格一律由後端計算（pricing.py），前端只負責顯示
       const priceInfo = data.price || { amount: null, self_drop_amount: null, text: "—", formula: "" };
 
@@ -1136,6 +1307,10 @@
       document.getElementById('action-review').classList.toggle('hidden', finalDecision !== 'review');
       document.getElementById('action-reject').classList.toggle('hidden', finalDecision !== 'reject');
       document.getElementById('action-retake').classList.toggle('hidden', finalDecision !== 'retake');
+      // 示範資料標示出來，避免被當成即時分析結果
+      const demoNote = document.getElementById('demo-note');
+      demoNote.innerText = data.demo ? `示範資料：預先保存的真實分析結果（${(data.saved_at || '').replace('T', ' ')}）` : '';
+      demoNote.classList.toggle('hidden', !data.demo);
 
       if (finalDecision === 'pass') {
         card.className = "ikea-gray p-5 rounded-xl border-l-4 border-[#0058A3]";
@@ -1151,7 +1326,8 @@
         card.className = "ikea-gray p-5 rounded-xl border-l-4 border-neutral-500";
         badge.className = "text-xs font-bold px-2.5 py-0.5 rounded bg-neutral-700 text-white";
         badge.innerText = "照片需要重拍";
-        lastRetakeViews = (data.retake_views || []).filter(v => v >= 1 && v <= 5);
+        // 示範資料的照片不是使用者拍的，所以示範時一律重拍全部
+        lastRetakeViews = data.demo ? [] : (data.retake_views || []).filter(v => v >= 1 && v <= 5);
         const dimNames = { structure: "結構", surface_wear: "表面磨損", water_damage: "受潮" };
         const unknown = Object.keys(dimNames).filter(k => data.dimensions[k].score === null).map(k => dimNames[k]);
         const parts = [];
@@ -1243,7 +1419,7 @@
 
     function submitHumanReview() {
       const btn = document.getElementById('btn-submit-review');
-      btn.innerText = "✓ 已送交客服專員";
+      btn.innerText = "✓ 已送出（原型示意）";
       btn.disabled = true;
     }
   </script>
